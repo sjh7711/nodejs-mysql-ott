@@ -4,6 +4,11 @@
 const user = JSON.parse(localStorage.getItem("login"));
 const $genreList = document.querySelector('.genre-list');
 const $fragment = document.createDocumentFragment();
+
+const parsedUrl = new URL(window.location.href);
+const urlId = parsedUrl.searchParams.get("id")
+console.log(urlId);
+
 let genres = {};
 let selectedGenre = { id: 16, name: "애니메이션" };
 
@@ -14,15 +19,17 @@ if (!user.curlog) {
 
 // main에서 가져온 id값을 discover API에 넣어준다.
 (async () => {
-  const res = await fetch(`https://api.themoviedb.org/3/discover/movie?api_key=${api_key}&language=ko&sort_by=popularity.desc&include_adult=false&include_video=false&page=1&with_genres=${selectedGenre.id}`);
-  const { results: movies } = await res.json();
-  $main__name.textContent = selectedGenre.name;
+  const resGenres = await fetch (`https://api.themoviedb.org/3/genre/movie/list?api_key=${api_key}&language=ko`)
+  const results = await resGenres.json();
+  genres = results.genres;
+  // console.log(genres);
+
+  const resDiscover = await fetch(`https://api.themoviedb.org/3/discover/movie?api_key=${api_key}&language=ko&sort_by=popularity.desc&include_adult=false&include_video=false&page=1&with_genres=${urlId}`);
+  const { results: movies } = await resDiscover.json();
+  const genreName = genres.find(genre => genre.id === +urlId);
+  $main__name.textContent = genreName.name;
   movies.forEach(movie => render(movie));
   $result__movies.appendChild($fragment);
-
-  const res2 = await fetch (`https://api.themoviedb.org/3/genre/movie/list?api_key=${api_key}&language=ko`)
-  const results = await res2.json();
-  genres = results.genres;
 })();
   
   // render함수로 DOM생성
