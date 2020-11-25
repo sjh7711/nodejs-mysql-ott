@@ -32,6 +32,7 @@ $searchForm.onsubmit = e => {
   $result__movies.innerHTML = "";
   i = 1;
   render();
+  $moreBtn.style.display = 'inline-block';
 };
 
 // 검색 API로 화면에 렌더하기
