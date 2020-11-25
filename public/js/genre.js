@@ -22,7 +22,6 @@ if (!user.curlog) {
   const resGenres = await fetch (`https://api.themoviedb.org/3/genre/movie/list?api_key=${api_key}&language=ko`)
   const results = await resGenres.json();
   genres = results.genres;
-  // console.log(genres);
 
   const resDiscover = await fetch(`https://api.themoviedb.org/3/discover/movie?api_key=${api_key}&language=ko&sort_by=popularity.desc&include_adult=false&include_video=false&page=1&with_genres=${urlId}`);
   const { results: movies } = await resDiscover.json();
@@ -33,8 +32,7 @@ if (!user.curlog) {
 })();
   
   // render함수로 DOM생성
-  
-  const render = (movie) => {
+    const render = (movie) => {
 
     const $li = document.createElement(`li`);
     $li.id = movie.id;
