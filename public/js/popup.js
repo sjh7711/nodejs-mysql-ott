@@ -36,7 +36,8 @@ const popup = (movie, actors) => {
   $genre.innerHTML = movie.genres[0].name;
   $runtime.innerHTML = movie.runtime;
   $actors.innerHTML = actors;
-
+  
+  console.log(getBookmarks);
   if (getBookmarks.indexOf(selectedId) !== -1) {
     $likeBtn.firstElementChild.innerHTML = `찜완료!`;
     $likeBtn.classList.add("liked");
@@ -61,6 +62,7 @@ const modifyBookMarks = async () => {
       }),
     });
     const { bookmarks } = await patchLi.json();
+    console.log(bookmarks);
     getBookmarks = bookmarks;
     $popupVigideo.innerHTML = "";
   } catch (err) {
@@ -108,6 +110,8 @@ $main__container__movies.onclick = async (e) => {
       `https://api.themoviedb.org/3/movie/${selectedId}/videos?api_key=${api_key}`
     );
     const { results } = await resVideo.json();
+    console.log(results);
+    console.log(selectedId);
     if (results.length !== 0) {
       $popupVideo.innerHTML = `<iframe width="770" height="350" src="https://www.youtube.com/embed/${results[0].key}?" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
     } else {

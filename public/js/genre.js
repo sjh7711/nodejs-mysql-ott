@@ -9,19 +9,18 @@ const parsedUrl = new URL(window.location.href);
 const urlId = parsedUrl.searchParams.get("id")
 console.log(urlId);
 
-let genres = {};
-let selectedGenre = { id: 16, name: "애니메이션" };
-
 // 미 로그인 시 로그인 페이지로 이동
 if (!user.curlog) {
   window.location.href = '/';
 }
+let genres = {};
 
 // main에서 가져온 id값을 discover API에 넣어준다.
 (async () => {
   const resGenres = await fetch (`https://api.themoviedb.org/3/genre/movie/list?api_key=${api_key}&language=ko`)
   const results = await resGenres.json();
   genres = results.genres;
+  console.log(genres);
 
   const resDiscover = await fetch(`https://api.themoviedb.org/3/discover/movie?api_key=${api_key}&language=ko&sort_by=popularity.desc&include_adult=false&include_video=false&page=1&with_genres=${urlId}`);
   const { results: movies } = await resDiscover.json();
