@@ -120,7 +120,6 @@ const clickBtn = ($button, $ul) => {
 };
 
 [...$movieLists].forEach($list => {
-  console.log(2);
   getMovieList($list.id, $list.querySelector("ul"));
 });
 [...$movieLists].forEach(($section) => {
@@ -191,4 +190,5 @@ $genreList.onclick = async e => {
   });
 }
 
-// const res = await fetch (`https://api.themoviedb.org/3/discover/movie?api_key=${api_key}&language=ko&sort_by=popularity.desc&include_adult=false&include_video=false&page=1`)
+const qs = getQueryStringObject();
+console.log(qs);
