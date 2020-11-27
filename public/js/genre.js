@@ -12,7 +12,6 @@ const urlId = parsedUrl.searchParams.get("id");
 console.log(urlId);
 
 let genres = {};
-let selectedGenre = { id: 16, name: "애니메이션" };
 
 // 현재 페이지네이션의 선택되어진 요소
 let currentPageElement;

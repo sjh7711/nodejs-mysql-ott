@@ -102,7 +102,6 @@ legend {
 }
 
 .errorColor {
-  /* background-color: #800000; */
   border: 3px solid #800000;
 }
 
@@ -118,13 +117,13 @@ legend {
 .signUp-bt {
   display: inline-block;
   width: 47%;
-  height: 50px;
+  height: 45px;
   font-size: 16px;
   color: #ffffff;
   background: #e50914;
   border: 0;
   border-radius: 4px;
-  margin-top: 16px;
+  margin-top: 30px;
   cursor: pointer;
 }
 
@@ -142,10 +141,10 @@ legend {
 }
 
 .preference {
-  margin-top: 20px;
+  margin-top: 16px;
   width: 100%;
   /* 원하는 너비설정 */
-  padding: 15px;
+  padding: 12px;
   /* 여백으로 높이 설정 */
   border: 1px solid #999;
   border-radius: 4px;

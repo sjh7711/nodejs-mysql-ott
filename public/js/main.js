@@ -167,21 +167,3 @@ $logOut.onclick = (e) => {
     })
   );
 };
-
-// 메인에서 장르를 클릭한다.
-// 장르 API에서 id와 내가 클릭한 textContent가 name 일치하면 id를 가져온다.
-
-const $genreList = document.querySelector(".genre-list");
-
-let selectedGenreId;
-$genreList.onclick = async e => {
-  if(!e.target.matches('.genre-list > li > a')) return;
-  console.log(e.target.textContent);
-  const res = await fetch (`https://api.themoviedb.org/3/genre/movie/list?api_key=${api_key}&language=ko`)
-  const { genres } = await res.json();
-  genres.forEach(genre => {
-    if(genre.name === e.target.textContent) {
-      let selectedGenreId = genre.id;
-    }
-  });
-}
