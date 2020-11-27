@@ -4,7 +4,7 @@ $signUpForm.onsubmit = async e => {
   e.preventDefault();
 
   // 에러메세지 초기화
-  [...$signUpContent].forEach(signInput => {
+  [...$signUpInput].forEach(signInput => {
     // 값을 올바르게 입력한후 다시 제출이벤트를 했을때 이전의 에러 메세지를 지워준다.
     signInput.nextElementSibling.textContent = '';
 
@@ -28,7 +28,7 @@ $signUpForm.onsubmit = async e => {
   };
 
   // 인풋창이 빈값일경우 에러 메세지, 인풋창 색깔 변경
-  [...$signUpContent].forEach(input => {
+  [...$signUpInput].forEach(input => {
     if (input.value === '') {
       // 만약 input 뒤에 예전에 생성한 경고메세지가 남아있으면 지워준다.
 

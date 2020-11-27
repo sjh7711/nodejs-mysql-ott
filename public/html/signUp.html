@@ -14,16 +14,16 @@
     <div class="signUp">
       <h2>회원가입</h2>
       <form class="signUp-form" action="/users" method="POST">
-        <input class="signUp-content signup-name" id='name' name="name" type="text" placeholder="이름">
+        <input class="signUp-input signup-name" id='name' name="name" type="text" placeholder="이름">
         <p class="alert"></p>
-        <input class="signUp-content signup-id" id='id' name="id" type="text" placeholder="아이디">
+        <input class="signUp-input signup-id" id='id' name="id" type="text" placeholder="아이디">
         <p class="alert"></p>
-        <input class="signUp-content signup-pw" id='pw' name="pw" type="password" placeholder="비밀번호">
+        <input class="signUp-input signup-pw" id='pw' name="pw" type="password" placeholder="비밀번호">
         <p class="alert"></p>
-        <input class="signUp-content signup-repw" id='repw' type="password" placeholder="비밀번호 재입력">
+        <input class="signUp-input signup-repw" id='repw' type="password" placeholder="비밀번호 재입력">
         <p class="alert"></p>
         <select class="preference" name="genre">
-          <option value="">선호 장르선택</option>
+          <option value="none">==== 선호 장르선택 ====</option>
           <option value="액션">액션</option>
           <option value="애니메이션">애니메이션</option>
           <option value="로맨스">로맨스</option>
