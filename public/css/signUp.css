@@ -102,7 +102,12 @@ legend {
 }
 
 .errorColor {
-  background-color: #800000;
+  /* background-color: #800000; */
+  border: 3px solid #800000;
+}
+
+.correctColor {
+  border: 3px solid rgb(31, 126, 2);
 }
 
 .alert {
