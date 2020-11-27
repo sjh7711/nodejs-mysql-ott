@@ -1,12 +1,9 @@
-// import {selectedGenreId} from './main.js';
-// console.log(selectedGenreId);
-
 const user = JSON.parse(localStorage.getItem("login"));
 const $genreList = document.querySelector('.genre-list');
 const $fragment = document.createDocumentFragment();
 
 const parsedUrl = new URL(window.location.href);
-const urlId = parsedUrl.searchParams.get("id")
+const urlId = parsedUrl.searchParams.get("id");
 console.log(urlId);
 
 // 미 로그인 시 로그인 페이지로 이동

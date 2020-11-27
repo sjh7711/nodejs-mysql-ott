@@ -1,7 +1,3 @@
-// if (!localUser.curlog) {
-//   window.location.href = "../index.html";
-// }
-
 const lang = "ko";
 const imgBase = "https://image.tmdb.org/t/p/w500/";
 const $logOut = document.getElementById("logout");
@@ -189,6 +185,3 @@ $genreList.onclick = async e => {
     }
   });
 }
-
-const qs = getQueryStringObject();
-console.log(qs);
