@@ -52,8 +52,8 @@ const getMovieList = async (getValue, $ul) => {
     );
     const { genres } = await genreRes.json();
     genreList = genres;
-    console.log(genreList);
   }
+  
   const url =
     getValue === "favorite"
       ? `https://api.themoviedb.org/3/discover/movie?api_key=${api_key}&with_genres=${
@@ -118,6 +118,7 @@ const clickBtn = ($button, $ul) => {
 [...$movieLists].forEach($list => {
   getMovieList($list.id, $list.querySelector("ul"));
 });
+
 [...$movieLists].forEach(($section) => {
   $section.querySelector("ul").style.transform = `translateX(${-(
     4 * liWidth
@@ -139,6 +140,7 @@ const clickBtn = ($button, $ul) => {
   frameborder="0" style="width: 100vw; height: 100%;"
   allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"></iframe>`;
 })();
+
 (async function () {
   const users = await fetch(`/users/${localUser.id}`);
   const { bookmarks } = await users.json();
