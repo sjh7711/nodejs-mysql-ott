@@ -5,8 +5,7 @@ const $signupId = document.querySelector('.signup-id');
 const $signupPw = document.querySelector('.signup-pw');
 const $signupRepw = document.querySelector('.signup-repw');
 const $signUpInput = document.querySelectorAll('.signUp-input');
-const $preference = document.querySelectorAll('.preference');
-let i = 0;
+const $preference = document.querySelector('.preference');
 
 const showErrorInput = (input) => {
   if(input.classList.contains('correctColor')) {
@@ -52,9 +51,7 @@ const checkValidId = async (input) => {
     if(!regId.test(input.value)) {
       showErrorInput(input);
       input.nextElementSibling.textContent = '아이디는 4~12자 이상, 영어와 숫자로 입력해 주세요.';
-      i++;
-      console.log(1);
-      // return;
+      return;
     } else {
       showCorrectInput(input);
     }
@@ -69,12 +66,10 @@ const checkValidId = async (input) => {
       }
       input.classList.add('errorColor');
       input.nextElementSibling.textContent = '아이디가 이미 존재합니다.'
-      i++; 
     }
   } catch (err) {
     console.log("[ERROR]", err);
   }
-  
 }
 
 // 비밀번호 조건 확인
@@ -83,7 +78,6 @@ const checkValidPw = (input) => {
     if(!regPw.test(input.value)) {
       showErrorInput(input);
       input.nextElementSibling.textContent = '비밀번호는 4~12자 이상, 영어와 숫자로 입력해 주세요.' 
-      i++;
     } else {
       showCorrectInput(input);
     }
@@ -113,7 +107,11 @@ $signUpForm.onsubmit = e => {
   e.preventDefault();
   
   if ([...$signUpInput].find(input => input.classList.contains('errorColor'))) return;
-
+  if ($preference.options[$preference.selectedIndex].value === 'none') {
+  $preference.nextElementSibling.textContent = '선호 장르를 선택해 주세요';
+  return;
+  } 
+  
   const formData = new FormData($signUpForm);
   const signUp = {};
 

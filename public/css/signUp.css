@@ -142,7 +142,7 @@ legend {
 }
 
 .preference {
-  margin-top: 16px;
+  margin: 16px auto 12px;
   width: 100%;
   /* 원하는 너비설정 */
   padding: 12px;

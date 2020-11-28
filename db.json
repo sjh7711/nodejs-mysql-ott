@@ -2,14 +2,14 @@
   "users": [
     {
       "name": "hello",
-      "id": "hihi",
+      "id": "hi",
       "pw": "123",
       "genre": "애니메이션",
       "bookmarks": []
     },
     {
       "name": "해리포터",
-      "id": "hihihi",
+      "id": "hihi",
       "pw": "hihi",
       "genre": "애니메이션",
       "bookmarks": [

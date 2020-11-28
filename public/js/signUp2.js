@@ -4,7 +4,7 @@ $signUpForm.onsubmit = async e => {
   e.preventDefault();
 
   // 에러메세지 초기화
-  [...$signUpInput].forEach(signInput => {
+  [...$signUpContent].forEach(signInput => {
     // 값을 올바르게 입력한후 다시 제출이벤트를 했을때 이전의 에러 메세지를 지워준다.
     signInput.nextElementSibling.textContent = '';
 
@@ -28,13 +28,13 @@ $signUpForm.onsubmit = async e => {
   };
 
   // 인풋창이 빈값일경우 에러 메세지, 인풋창 색깔 변경
-  [...$signUpInput].forEach(input => {
+  [...$signUpContent].forEach(input => {
     if (input.value === '') {
       // 만약 input 뒤에 예전에 생성한 경고메세지가 남아있으면 지워준다.
 
       // 경고메세지를 생성해 그다음 요소로 넣어준다.
       input.classList.add('errorColor'); // 에러컬러 클래스를 넣어준다
-      input.nextElementSibling.textContent = input.id === 'name' ? '이름을 넣어주십시오.' : input.id === 'id' ? '아이디를 입력해 주십시오' : '비밀번호를 입력해 주십시오.';
+      input.nextElementSibling.textContent = `${input.id === 'name' ? '이름을 넣어주십시오.' : input.id === 'id' ? '아이디를 입력해 주십시오' : '비밀번호를 입력해 주십시오.'}`;
       ++count;
     }
   });
