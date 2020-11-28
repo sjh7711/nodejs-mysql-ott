@@ -7,7 +7,6 @@ const $signupRepw = document.querySelector('.signup-repw');
 const $signUpInput = document.querySelectorAll('.signUp-input');
 let i = 0;
 
-
 const showErrorInput = (input) => {
   if(input.classList.contains('correctColor')) {
     input.classList.remove('correctColor');
@@ -38,7 +37,6 @@ const checkblank = input => {
       : input.id === 'pw'
       ? '비밀번호를 입력해 주세요.'
       : '비밀번호 확인을 입력해 주세요.';
-    i++;
   } else {
     showCorrectInput(input);
   }; 
@@ -54,6 +52,7 @@ const checkValidId = async (input) => {
       showErrorInput(input);
       input.nextElementSibling.textContent = '아이디는 4~12자 이상, 영어와 숫자로 입력해 주세요.';
       i++;
+      console.log(1);
       // return;
     } else {
       showCorrectInput(input);
@@ -93,51 +92,22 @@ const checkValidPw = (input) => {
 const checkValidRepw = (input) => {
   if (input.value !== input.previousElementSibling.previousElementSibling.value){
     showErrorInput(input);
-    showErrorInput(input.previousElementSibling.previousElementSibling);
     input.nextElementSibling.textContent = '비밀번호가 서로 다릅니다.' 
-    console.log(1);
   } else {
     showCorrectInput(input);
-    showCorrectInput(input.previousElementSibling.previousElementSibling);
-    console.log(2);
   }
 }
 
 // Event Handler
-$signupName.onblur = e => {
-  checkblank(e.target);
-}
-$signupId.onblur = e => {
-  checkblank(e.target);
-  checkValidId(e.target);
-}
-$signupPw.onblur = e => {
-  checkblank(e.target);
-  checkValidPw(e.target)
-  console.log(1);
-}
-$signupRepw.onblur = e => {
-  checkValidRepw(e.target);
-  console.log(2);
-  checkblank(e.target);
-}
+[...$signUpInput].forEach(input => {
+  input.onblur = async () => {
+    checkblank(input);
+    if (input.id === 'id') checkValidId(input);
+    if (input.id === 'pw') checkValidPw(input);
+    if (input.id === 'repw') checkValidRepw(input);
+  }
+});
 
 $signUpForm.onsubmit = e => {
   e.preventDefault();
 }
-
-// $signUpInput.onblur = () => {
-//   [...$signUpInput].forEach(input => {
-//     console.log(input.value);
-//     input.classList.add('errorColor');
-
-//     if (!input.value) {
-//       input.classList.remove('correctColor');
-//       console.log(1);
-//     } else {
-//       input.classList.remove('errorColor');
-//       input.classList.add('correctColor');
-//       console.log(2);
-//     }
-//   })
-// }
