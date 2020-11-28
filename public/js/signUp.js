@@ -5,6 +5,7 @@ const $signupId = document.querySelector('.signup-id');
 const $signupPw = document.querySelector('.signup-pw');
 const $signupRepw = document.querySelector('.signup-repw');
 const $signUpInput = document.querySelectorAll('.signUp-input');
+const $preference = document.querySelectorAll('.preference');
 let i = 0;
 
 const showErrorInput = (input) => {
@@ -100,7 +101,7 @@ const checkValidRepw = (input) => {
 
 // Event Handler
 [...$signUpInput].forEach(input => {
-  input.onblur = async () => {
+  input.onblur = () => {
     checkblank(input);
     if (input.id === 'id') checkValidId(input);
     if (input.id === 'pw') checkValidPw(input);
@@ -110,4 +111,21 @@ const checkValidRepw = (input) => {
 
 $signUpForm.onsubmit = e => {
   e.preventDefault();
+  
+  if ([...$signUpInput].find(input => input.classList.contains('errorColor'))) return;
+
+  const formData = new FormData($signUpForm);
+  const signUp = {};
+
+  for (const pair of formData) {
+    signUp[pair[0]] = pair[1];
+  }
+
+  fetch('/users', {
+    method:'POST',
+    headers: { 'content-Type': 'application/json'},
+    body: JSON.stringify(signUp)
+  });
+
+  location.assign('/')
 }
