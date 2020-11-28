@@ -21,7 +21,7 @@ const $pws = document.querySelectorAll('.pw');
 const $preference = document.querySelector('.preference');
 const $completedMessage = document.querySelector('.completedMessage');
 const $modiBt = document.querySelectorAll('.modi-bt');
-const $cancle = document.querySelector('.cancle');
+const $cancleBt = document.querySelector('.cancle-bt');
 const $message = document.querySelector('.message');
 
 // 회원수정 페이지로 왔을때 input value 값 로그인되어있는 아이디 값으로 각각 초기화 해준다.
@@ -177,7 +177,7 @@ $modiIfBt.onclick = async e => {
 };
 
 // 취소하기 버튼 클릭시 이전 페이지로 넘어간다.
-$cancle.onclick = () => {
+$cancleBt.onclick = () => {
   window.history.go(-1);
 };
 

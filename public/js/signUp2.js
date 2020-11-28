@@ -1,3 +1,4 @@
+// Event Handler
 $signUpForm.onsubmit = async e => {
   let count = 0;
 
