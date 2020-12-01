@@ -1,4 +1,5 @@
 const user = JSON.parse(localStorage.getItem("login"));
+
 const $genreList = document.querySelector('.genre-list');
 const $fragment = document.createDocumentFragment();
 const $pagenation = document.querySelector('.pagenation');

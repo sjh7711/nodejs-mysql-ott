@@ -79,18 +79,6 @@ legend {
   transform: translate(-50%, -50%);
 }
 
-.modi-bt {
-  cursor: pointer;
-  /* margin-bottom: 10px; */
-  height: 40px;
-  font-size: 15px;
-  border-radius: 4px;
-}
-
-.modi-bt:hover {
-  background-color: grey;
-}
-
 .modiIf>h2 {
   font-size: 32px;
   font-weight: 700;
@@ -109,16 +97,38 @@ legend {
   color: #ffffff;
 }
 
-.modiIf-content:hover {
+.iconInput {
+  position: relative;
+}
+
+.penIcon,
+.penIcon2 {
+  color: #fff;
+  position: absolute;
+  top: 26px;
+  right: 15px;
+  cursor: pointer;
+}
+
+.penIcon:hover,
+.penIcon2:hover {
+  color: rgb(160, 160, 160);
+}
+
+.activeColor {
   background-color: #800000;
   caret-color: #ffffff;
 }
 
-.errorColor {
-  background-color: #800000;
+.activePenColor {
+  color: rgb(160, 160, 160);
 }
 
-.correctColor {
+.errorColor {
+  border: 3px solid #800000;
+}
+
+.changedColor {
   border: 3px solid rgb(27, 102, 4);
 }
 
@@ -168,12 +178,13 @@ legend {
   margin-top: 15px;
 }
 
-.message {
+.pwMessage,
+.nameMessage {
+  display: none;
   color: white;
   margin-top: 10px;
   opacity: 0.8;
-  padding-left: 0;
-  display: none;
+  /* padding-left: 0; */
 }
 
 .bt {
