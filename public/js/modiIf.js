@@ -2,8 +2,10 @@ const user = JSON.parse(localStorage.getItem('login'));
 
 const $modiIfContent = document.querySelectorAll('.modiIf-content');
 const $pw = document.querySelectorAll('.pw');
+const $iconInput = document.querySelectorAll('.iconInput');
 
 const $modiIf = document.querySelector('.modiIf');
+const $modiIfForm = document.querySelector('.modiIfForm');
 const $modiIfName = document.querySelector('.modiIf-name');
 const $modiIfId = document.querySelector('.modiIf-id');
 const $modiIfCurPw = document.querySelector('.modiIf-curPw');
@@ -181,18 +183,29 @@ $modiIf.addEventListener("focusout", async e => {
 $submitBt.onclick = e => {
   e.preventDefault();
 
+  // 장르 변경 시 변경된 장르 적용
   const selectedGenre = $preference.options[$preference.selectedIndex].value;
   let modifiedGenre;
   ( selectedGenre === 'none' || selectedGenre === user.genre ) 
     ? modifiedGenre = user.genre
     : modifiedGenre = selectedGenre
 
-  // // localStorage로 바뀐 정보 보내기
+    // || [...$modiIfForm.children.children].find(input => input.classList.contains('errorColor'))
+  if ([...$modiIfForm.children].find(input => input.classList.contains('errorColor'))) {
+    console.log(1)
+  } else {
+    console.log(2);
+  }
+
+[...$iconInput].forEach(div => {
+  console.log(div.querySelector('input').classList.contains('errorColor'));
+  div.querySelector('input').classList.contains('errorColor')});
+
+  // localStorage로 바뀐 정보 보내기
   localStorage.setItem('login', 
-    JSON.parse({
+    JSON.stringify({
       id: user.id,
       name: $modiIfName.value,
-      // 장르 고치기
       genre: modifiedGenre,
       savelog: user.savelog,
       curlog: user.curlog
