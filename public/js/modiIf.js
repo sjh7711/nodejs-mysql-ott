@@ -110,6 +110,7 @@ $penIcon2.onclick = e => {
   } else {
     $pwMessage.style.display = 'none';
   }
+}
 
 // keydomn 시 비밀번호 정규표현식 조건 확인
 $modiIf.onkeydown = e => {
@@ -127,18 +128,19 @@ $modiIf.onkeydown = e => {
 $modiIf.addEventListener("focusout", async e => {
   if (!e.target.matches('.pw')) return;
 
-// 모두 빈칸이면 border 변화없이 놔두기
-if ([...$pw].forEach(input => input.value === '')) {
-  [...$pw].forEach(input => {
-    if (input.classList.contains('changedColor')) {
-      input.classList.remove('changedColor');
-      input.nextElementSibling.textContent = ''
-    } else if (input.classList.contains('errorColor')) {
-      input.classList.remove('errorColor');
-      input.nextElementSibling.textContent = ''
-    }
-  })
-}
+  // 모두 빈칸이면 border 변화없이 놔두기
+  if ([...$pw].forEach(input => input.value === '')) {
+    [...$pw].forEach(input => {
+      if (input.classList.contains('changedColor')) {
+        input.classList.remove('changedColor');
+        input.nextElementSibling.textContent = ''
+      } else if (input.classList.contains('errorColor')) {
+        input.classList.remove('errorColor');
+        input.nextElementSibling.textContent = ''
+      }
+    })
+  }
+
   // 현재 비밀번호 확인
   if (e.target.id === 'curPw') {
     const res = await fetch(`/users/${user.id}`);
@@ -175,6 +177,32 @@ if ([...$pw].forEach(input => input.value === '')) {
   }
 });
 
+// 수정 버튼 클릭 이벤트
+$submitBt.onclick = e => {
+  e.preventDefault();
+
+  const selectedGenre = $preference.options[$preference.selectedIndex].value;
+  let modifiedGenre;
+  ( selectedGenre === 'none' || selectedGenre === user.genre ) 
+    ? modifiedGenre = user.genre
+    : modifiedGenre = selectedGenre
+
+  // // localStorage로 바뀐 정보 보내기
+  localStorage.setItem('login', 
+    JSON.parse({
+      id: user.id,
+      name: $modiIfName.value,
+      // 장르 고치기
+      genre: modifiedGenre,
+      savelog: user.savelog,
+      curlog: user.curlog
+    }))
+  
+  // DB로 바뀐 정보 보내기
+
+  //
+
+}
 
 // 뒤로가기 클릭 이벤트
 $cancleBt.onclick = () => {
