@@ -148,8 +148,6 @@ $modiIfBt.onclick = async e => {
     curlog: user.curlog
   }));
 
-
-
   // localStorage.clear();
 
   // 이름 수정시켜준다.

@@ -50,7 +50,7 @@ const checkValidId = async (input) => {
     const regId = /^[A-Za-z0-9+]{4,15}$/g;
     if(!regId.test(input.value)) {
       showErrorInput(input);
-      input.nextElementSibling.textContent = '아이디는 4~12자 이상, 영어와 숫자로 입력해 주세요.';
+      input.nextElementSibling.textContent = '아이디는 4~12자, 영어와 숫자로 입력해 주세요.';
       return;
     } else {
       showCorrectInput(input);
@@ -77,7 +77,7 @@ const checkValidPw = (input) => {
   const regPw = /^[A-Za-z0-9+]{4,15}$/g;
     if(!regPw.test(input.value)) {
       showErrorInput(input);
-      input.nextElementSibling.textContent = '비밀번호는 4~12자 이상, 영어와 숫자로 입력해 주세요.' 
+      input.nextElementSibling.textContent = '비밀번호는 4~12자, 영어와 숫자로 입력해 주세요.' 
     } else {
       showCorrectInput(input);
     }

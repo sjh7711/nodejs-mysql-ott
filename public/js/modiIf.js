@@ -1,14 +1,25 @@
 const user = JSON.parse(localStorage.getItem('login'));
 
-const $modiIf = document.querySelector('.modiIf');
 const $modiIfContent = document.querySelectorAll('.modiIf-content');
+const $pw = document.querySelectorAll('.pw');
+const $iconInput = document.querySelectorAll('.iconInput');
+
+const $modiIf = document.querySelector('.modiIf');
+const $modiIfForm = document.querySelector('.modiIfForm');
 const $modiIfName = document.querySelector('.modiIf-name');
 const $modiIfId = document.querySelector('.modiIf-id');
+const $modiIfCurPw = document.querySelector('.modiIf-curPw');
+const $modiIfPw = document.querySelector('.modiIf-pw');
+const $modiIfRePw = document.querySelector('.modiIf-rePw');
 const $penIcon = document.querySelector('.penIcon');
 const $penIcon2 = document.querySelector('.penIcon2');
-const $pw = document.querySelectorAll('.pw');
 const $nameMessage = document.querySelector('.nameMessage');
 const $pwMessage = document.querySelector('.pwMessage');
+const $submitBt = document.querySelector('.submit-bt');
+const $cancleBt = document.querySelector('.cancle-bt');
+const $preference = document.querySelector('.preference');
+
+const regPw = /^[A-Za-z0-9+]{4,15}$/;
 
 // 미로그인 시 로그인 화면으로 이동
 if (!user.curlog) {
@@ -34,44 +45,24 @@ const showGreenInput = (input) => {
   input.classList.add('changedColor');
 }
 
-// key가 어떻게 user.key로 들어가게 하지???
-const showChangedInput = (key, input) => {
+const showChangedNameInput = (input) => {
   if (input.value !== user.name) {
     showGreenInput(input);
   } else {
-    if (input.classList.contains('changedColor'))
-    input.classList.remove('changedColor')
+    if (input.classList.contains('changedColor')){
+      input.classList.remove('changedColor')
+    }
   }
 }
 
 // Event Handler
-// input창 focusout 이벤트
-$modiIf.addEventListener("focusout", e => {
-  if (!e.target.matches('.modiIf input')) return;
-
-  const reg = /^[A-Za-z0-9가-힣+]*$/g;
-
-  // 빈칸 및 정규표현식 확인
-  [...$pw].forEach(input =>
-    (!input.value.trim() || !reg.test(input.value))
-  ? console.log(input.value)
-  : console.log(0)
-  )
-
-  // 현재 비밀번호 확인
-
-  // 변경된 비밀번호 확인 일치여부 확인
-  // 변경된 비밀번호와 현재 비밀번호 다른지 확인
-
-
-});
-
+// 이름 옆 펜아이콘 클릭 이벤트
 $penIcon.onclick = e => {
   $modiIfName.toggleAttribute('disabled');
   $modiIfName.classList.toggle('activeColor');
   $penIcon.classList.toggle('activePenColor');
-  const input = e.target.previousElementSibling;
-  const reg = /^[A-Za-z0-9가-힣+]*$/g;
+
+  const input = e.target.nextElementSibling;
   
   // 이름 변경 안내메세지 보이기
   if (input.classList.contains('activeColor')){
@@ -79,22 +70,38 @@ $penIcon.onclick = e => {
   } else {
     $nameMessage.style.display = 'none';
   }
+}
 
-  // 정규표현식과 빈칸확인 
-  (!input.value.trim() || !reg.test(input.value)) 
+// 스페이스 바 입력 방지 이벤트
+[...$modiIf.children].forEach(child => 
+  child.onkeydown = e => {
+  if (!e.target.matches('.modiIf input')) return;
+
+  const kcode = e.keyCode;
+  if(kcode === 32) return false;
+})
+
+// 이름 input에 값 입력되었을 때
+// 1. 정규표현식으로 검사
+// 2. 이름 변경 시 초록색으로 input창 변경
+$modiIfName.oninput = e => {
+  const reg = /^[A-Za-z0-9가-힣+]*$/g;
+
+  (!reg.test(e.target.value))
     ? (
-      input.classList.add('errorColor'),
-      input.nextElementSibling.nextElementSibling.textContent = '이름을 올바르게 입력해주세요.'
+      showErrorInput(e.target),
+      e.target.nextElementSibling.textContent = '이름을 올바르게 입력해주세요.'
     ) : (
-      input.classList.remove('errorColor'),
-      input.nextElementSibling.nextElementSibling.textContent = '',
+      e.target.classList.remove('errorColor'),
+      e.target.nextElementSibling.textContent = '',
       // 기존값과 바뀌면 초록색으로 색변경
-      showChangedInput(name, input)
+      showChangedNameInput(e.target)
     )
 }
 
+// 비밀번호 옆 펜아이콘 클릭 이벤트
 $penIcon2.onclick = e => {
-  const input = e.target.previousElementSibling;
+  const input = e.target.nextElementSibling;
   [...$pw].forEach(input => input.toggleAttribute('disabled'));
   [...$pw].forEach(input => input.classList.toggle('activeColor'));
   $penIcon2.classList.toggle('activePenColor');
@@ -105,4 +112,112 @@ $penIcon2.onclick = e => {
   } else {
     $pwMessage.style.display = 'none';
   }
+}
+
+// keydomn 시 비밀번호 정규표현식 조건 확인
+$modiIf.onkeydown = e => {
+  if (!e.target.classList.contains('pw')) return;
+
+  if (!regPw.test(e.target.value)){
+    e.target.nextElementSibling.textContent = '비밀번호는 4~12자, 영어와 숫자로 입력해 주세요.'
+  } else {
+    e.target.nextElementSibling.textContent = '';
+  }
+};
+
+// input창 focusout 이벤트
+// 비밀번호 input창 조건 확인
+$modiIf.addEventListener("focusout", async e => {
+  if (!e.target.matches('.pw')) return;
+
+  // 모두 빈칸이면 border 변화없이 놔두기
+  if ([...$pw].forEach(input => input.value === '')) {
+    [...$pw].forEach(input => {
+      if (input.classList.contains('changedColor')) {
+        input.classList.remove('changedColor');
+        input.nextElementSibling.textContent = ''
+      } else if (input.classList.contains('errorColor')) {
+        input.classList.remove('errorColor');
+        input.nextElementSibling.textContent = ''
+      }
+    })
+  }
+
+  // 현재 비밀번호 확인
+  if (e.target.id === 'curPw') {
+    const res = await fetch(`/users/${user.id}`);
+    const userInfo = await res.json();
+    if (userInfo.pw !== e.target.value) {
+      showErrorInput($modiIfCurPw);
+      $modiIfCurPw.nextElementSibling.textContent = '현재 비밀번호가 올바르지 않습니다.';
+    } else {
+      showGreenInput($modiIfCurPw);
+      $modiIfCurPw.nextElementSibling.textContent = '';
+    }
+  }
+
+  // 변경된 비밀번호와 현재 비밀번호 다른지 확인
+  if (e.target.id === 'pw') {
+    if ($modiIfPw.value === $modiIfCurPw.value) {
+      showErrorInput($modiIfPw);
+      $modiIfPw.nextElementSibling.textContent = '기존 비밀번호와 동일합니다.';
+    } else {
+      showGreenInput($modiIfPw);
+      $modiIfPw.nextElementSibling.textContent = '';
+    }
+  }
+
+  // 변경된 비밀번호와 재입력 일치여부 확인
+  if (e.target.id === 'rePw') {
+    if ($modiIfPw.value !== $modiIfRePw.value) {
+      showErrorInput($modiIfRePw);
+      $modiIfRePw.nextElementSibling.textContent = '비밀번호가 서로 다릅니다.'
+    } else {
+      showGreenInput($modiIfRePw);
+      $modiIfRePw.nextElementSibling.textContent = '';
+    }
+  }
+});
+
+// 수정 버튼 클릭 이벤트
+$submitBt.onclick = e => {
+  e.preventDefault();
+
+  // 장르 변경 시 변경된 장르 적용
+  const selectedGenre = $preference.options[$preference.selectedIndex].value;
+  let modifiedGenre;
+  ( selectedGenre === 'none' || selectedGenre === user.genre ) 
+    ? modifiedGenre = user.genre
+    : modifiedGenre = selectedGenre
+
+    // || [...$modiIfForm.children.children].find(input => input.classList.contains('errorColor'))
+  if ([...$modiIfForm.children].find(input => input.classList.contains('errorColor'))) {
+    console.log(1)
+  } else {
+    console.log(2);
+  }
+
+[...$iconInput].forEach(div => {
+  console.log(div.querySelector('input').classList.contains('errorColor'));
+  div.querySelector('input').classList.contains('errorColor')});
+
+  // localStorage로 바뀐 정보 보내기
+  localStorage.setItem('login', 
+    JSON.stringify({
+      id: user.id,
+      name: $modiIfName.value,
+      genre: modifiedGenre,
+      savelog: user.savelog,
+      curlog: user.curlog
+    }))
+  
+  // DB로 바뀐 정보 보내기
+
+  //
+
+}
+
+// 뒤로가기 클릭 이벤트
+$cancleBt.onclick = () => {
+  window.history.back();
 }

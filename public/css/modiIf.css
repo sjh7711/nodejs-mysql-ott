@@ -116,8 +116,12 @@ legend {
 }
 
 .activeColor {
-  background-color: #800000;
+  background-color: #646464;
   caret-color: #ffffff;
+}
+
+.activeColor::placeholder {
+  color: rgb(216, 216, 216);
 }
 
 .activePenColor {
