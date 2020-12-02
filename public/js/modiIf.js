@@ -14,6 +14,7 @@ const $modiIfRePw = document.querySelector('.modiIf-rePw');
 const $penIcon = document.querySelector('.penIcon');
 const $penIcon2 = document.querySelector('.penIcon2');
 const $nameMessage = document.querySelector('.nameMessage');
+const $completedMessage = document.querySelector('.completedMessage');
 const $pwMessage = document.querySelector('.pwMessage');
 const $submitBt = document.querySelector('.submit-bt');
 const $cancleBt = document.querySelector('.cancle-bt');
@@ -114,7 +115,7 @@ $penIcon2.onclick = e => {
   }
 }
 
-// keydomn 시 비밀번호 정규표현식 조건 확인
+// keydomn 시 비밀번호 정규표현식 조건 확인 이벤트
 $modiIf.onkeydown = e => {
   if (!e.target.classList.contains('pw')) return;
 
@@ -131,7 +132,7 @@ $modiIf.addEventListener("focusout", async e => {
   if (!e.target.matches('.pw')) return;
 
   // 모두 빈칸이면 border 변화없이 놔두기
-  if ([...$pw].forEach(input => input.value === '')) {
+  if ([...$pw].find(input => input.value === '')) {
     [...$pw].forEach(input => {
       if (input.classList.contains('changedColor')) {
         input.classList.remove('changedColor');
@@ -141,6 +142,7 @@ $modiIf.addEventListener("focusout", async e => {
         input.nextElementSibling.textContent = ''
       }
     })
+    return;
   }
 
   // 현재 비밀번호 확인
@@ -150,6 +152,7 @@ $modiIf.addEventListener("focusout", async e => {
     if (userInfo.pw !== e.target.value) {
       showErrorInput($modiIfCurPw);
       $modiIfCurPw.nextElementSibling.textContent = '현재 비밀번호가 올바르지 않습니다.';
+      return;
     } else {
       showGreenInput($modiIfCurPw);
       $modiIfCurPw.nextElementSibling.textContent = '';
@@ -180,7 +183,7 @@ $modiIf.addEventListener("focusout", async e => {
 });
 
 // 수정 버튼 클릭 이벤트
-$submitBt.onclick = e => {
+$submitBt.onclick = async e => {
   e.preventDefault();
 
   // 장르 변경 시 변경된 장르 적용
@@ -190,16 +193,14 @@ $submitBt.onclick = e => {
     ? modifiedGenre = user.genre
     : modifiedGenre = selectedGenre
 
-    // || [...$modiIfForm.children.children].find(input => input.classList.contains('errorColor'))
-  if ([...$modiIfForm.children].find(input => input.classList.contains('errorColor'))) {
-    console.log(1)
+  // errorColor가 존재하면 에러메세지 출력하고 return
+  if ([...$modiIfForm.children].find(input => input.classList.contains('errorColor')) || [...$iconInput].find(div => div.querySelector('input').classList.contains('errorColor'))
+  ) {
+    $completedMessage.textContent = '정보를 올바르게 입력해 주세요.'
+    return;
   } else {
-    console.log(2);
+    $completedMessage.textContent = '회원정보 수정이 완료되었습니다.'
   }
-
-[...$iconInput].forEach(div => {
-  console.log(div.querySelector('input').classList.contains('errorColor'));
-  div.querySelector('input').classList.contains('errorColor')});
 
   // localStorage로 바뀐 정보 보내기
   localStorage.setItem('login', 
@@ -212,9 +213,6 @@ $submitBt.onclick = e => {
     }))
   
   // DB로 바뀐 정보 보내기
-
-  //
-
 }
 
 // 뒤로가기 클릭 이벤트
