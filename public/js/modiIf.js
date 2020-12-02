@@ -197,9 +197,10 @@ $submitBt.onclick = async e => {
   if ([...$modiIfForm.children].find(input => input.classList.contains('errorColor')) || [...$iconInput].find(div => div.querySelector('input').classList.contains('errorColor'))
   ) {
     $completedMessage.textContent = '정보를 올바르게 입력해 주세요.'
-    return;
   } else {
-    $completedMessage.textContent = '회원정보 수정이 완료되었습니다.'
+    $completedMessage.textContent = '';
+    alert('회원정보 수정이 완료되었습니다.')
+    window.location.href = '/html/modiIf.html'
   }
 
   // localStorage로 바뀐 정보 보내기
@@ -212,7 +213,29 @@ $submitBt.onclick = async e => {
       curlog: user.curlog
     }))
   
-  // DB로 바뀐 정보 보내기
+  // DB로 바뀐 정보 보내기(이름, 비밀번호, 장르)
+  // DB로 이름 정보 보내기
+  if ($modiIfName.classList.contains('changedColor')) {
+    await fetch(`/users/${user.id}`, {
+      method: 'PATCH',
+      headers: { 'content-Type': 'application/json' },
+      body: JSON.stringify({name: `${$modiIfName.value}`})
+    })
+  }
+  // DB로 비밀번호 정보 보내기
+  if ($modiIfPw.classList.contains('changedColor')) {
+    await fetch(`/users/${user.id}`, {
+      method: 'PATCH',
+      headers: { 'content-Type': 'application/json' },
+      body: JSON.stringify({pw: `${$modiIfPw.value}`})
+    })
+  }
+  // DB로 장르 정보 보내기
+  await fetch(`/users/${user.id}`, {
+    method: 'PATCH',
+    headers: { 'content-Type': 'application/json' },
+    body: JSON.stringify({genre: `${modifiedGenre}`})
+  })
 }
 
 // 뒤로가기 클릭 이벤트
