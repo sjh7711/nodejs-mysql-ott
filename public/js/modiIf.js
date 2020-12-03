@@ -100,6 +100,21 @@ $modiIfName.oninput = e => {
     )
 }
 
+// 모두 빈칸이면 border 변화없이 놔두기
+const allBlank = () => {
+  if ([...$pw].every(input => !input.value)) {
+    [...$pw].forEach(input => {
+      if (input.classList.contains('changedColor')) {
+        input.classList.remove('changedColor');
+        input.nextElementSibling.textContent = ''
+      } else if (input.classList.contains('errorColor')) {
+        input.classList.remove('errorColor');
+        input.nextElementSibling.textContent = ''
+      }
+    })
+  }
+}
+
 // 비밀번호 옆 펜아이콘 클릭 이벤트
 $penIcon2.onclick = e => {
   const input = e.target.nextElementSibling;
@@ -113,6 +128,9 @@ $penIcon2.onclick = e => {
   } else {
     $pwMessage.style.display = 'none';
   }
+
+  // 모두 빈칸이면 border 변화없이 놔두기
+  allBlank();
 }
 
 // keydomn 시 비밀번호 정규표현식 조건 확인 이벤트
@@ -124,26 +142,14 @@ $modiIf.onkeydown = e => {
   } else {
     e.target.nextElementSibling.textContent = '';
   }
+  
+console.log($modiIfPw.value);
 };
 
 // input창 focusout 이벤트
 // 비밀번호 input창 조건 확인
 $modiIf.addEventListener("focusout", async e => {
   if (!e.target.matches('.pw')) return;
-
-  // 모두 빈칸이면 border 변화없이 놔두기
-  if ([...$pw].find(input => input.value === '')) {
-    [...$pw].forEach(input => {
-      if (input.classList.contains('changedColor')) {
-        input.classList.remove('changedColor');
-        input.nextElementSibling.textContent = ''
-      } else if (input.classList.contains('errorColor')) {
-        input.classList.remove('errorColor');
-        input.nextElementSibling.textContent = ''
-      }
-    })
-    return;
-  }
 
   // 현재 비밀번호 확인
   if (e.target.id === 'curPw') {
@@ -175,6 +181,9 @@ $modiIf.addEventListener("focusout", async e => {
     if ($modiIfPw.value !== $modiIfRePw.value) {
       showErrorInput($modiIfRePw);
       $modiIfRePw.nextElementSibling.textContent = '비밀번호가 서로 다릅니다.'
+      return;
+    } else if ($modiIfPw.classList.contains('errorColor')) {
+      showErrorInput($modiIfRePw);
     } else {
       showGreenInput($modiIfRePw);
       $modiIfRePw.nextElementSibling.textContent = '';
@@ -182,7 +191,7 @@ $modiIf.addEventListener("focusout", async e => {
   }
 });
 
-// 수정 버튼 클릭 이벤트
+// 수정완료 버튼 클릭 이벤트
 $submitBt.onclick = async e => {
   e.preventDefault();
 
@@ -194,13 +203,15 @@ $submitBt.onclick = async e => {
     : modifiedGenre = selectedGenre
 
   // errorColor가 존재하면 에러메세지 출력하고 return
-  if ([...$modiIfForm.children].find(input => input.classList.contains('errorColor')) || [...$iconInput].find(div => div.querySelector('input').classList.contains('errorColor'))
-  ) {
+  if ([...$modiIfForm.children].find(input => input.classList.contains('errorColor')) || [...$iconInput].find(div => div.querySelector('input').classList.contains('errorColor'))) {
     $completedMessage.textContent = '정보를 올바르게 입력해 주세요.'
   } else {
     $completedMessage.textContent = '';
-    alert('회원정보 수정이 완료되었습니다.')
-    window.location.href = '/html/modiIf.html'
+    const confirmAlert = confirm('회원정보를 수정하시겠습니까?');
+    if (confirmAlert) {
+      alert('회원정보가 수정되었습니다.')
+      window.location.href = '/html/modiIf.html'
+    }
   }
 
   // localStorage로 바뀐 정보 보내기

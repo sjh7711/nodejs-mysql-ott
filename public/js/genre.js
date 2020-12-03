@@ -107,7 +107,7 @@ $topBtn.onclick = e => {
 }
 
 // 스크롤이 최상단이면 topBtn 보이지 않기
-window.onscroll= e => {
+window.onscroll= () => {
   let yOffset = window.pageYOffset;
   if (yOffset === 0) {
     $topBtn.style.display = 'none';
@@ -116,6 +116,7 @@ window.onscroll= e => {
   }
 }
 
+// 페이지네이션
 window.onload = async () => {
   let i = 1;
   

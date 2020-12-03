@@ -160,6 +160,14 @@ legend {
   text-decoration: underline;
 }
 
+.disabledBt {
+  background: #a1a1a1;
+}
+
+.disabledBt:hover {
+  background: #a1a1a1;
+}
+
 .cancle-bt {
   background-color: #444444;
 }
