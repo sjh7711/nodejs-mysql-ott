@@ -100,21 +100,6 @@ $modiIfName.oninput = e => {
     )
 }
 
-// 모두 빈칸이면 border 변화없이 놔두기
-const allBlank = () => {
-  if ([...$pw].every(input => !input.value)) {
-    [...$pw].forEach(input => {
-      if (input.classList.contains('changedColor')) {
-        input.classList.remove('changedColor');
-        input.nextElementSibling.textContent = ''
-      } else if (input.classList.contains('errorColor')) {
-        input.classList.remove('errorColor');
-        input.nextElementSibling.textContent = ''
-      }
-    })
-  }
-}
-
 // 비밀번호 옆 펜아이콘 클릭 이벤트
 $penIcon2.onclick = e => {
   const input = e.target.nextElementSibling;
@@ -130,7 +115,17 @@ $penIcon2.onclick = e => {
   }
 
   // 모두 빈칸이면 border 변화없이 놔두기
-  allBlank();
+  if ([...$pw].every(input => !input.value)) {
+    [...$pw].forEach(input => {
+      if (input.classList.contains('changedColor')) {
+        input.classList.remove('changedColor');
+        input.nextElementSibling.textContent = ''
+      } else if (input.classList.contains('errorColor')) {
+        input.classList.remove('errorColor');
+        input.nextElementSibling.textContent = ''
+      }
+    })
+  }
 }
 
 // keydomn 시 비밀번호 정규표현식 조건 확인 이벤트
@@ -142,8 +137,6 @@ $modiIf.onkeydown = e => {
   } else {
     e.target.nextElementSibling.textContent = '';
   }
-  
-console.log($modiIfPw.value);
 };
 
 // input창 focusout 이벤트
@@ -209,8 +202,8 @@ $submitBt.onclick = async e => {
     $completedMessage.textContent = '';
     const confirmAlert = confirm('회원정보를 수정하시겠습니까?');
     if (confirmAlert) {
-      alert('회원정보가 수정되었습니다.')
-      window.location.href = '/html/modiIf.html'
+      alert('회원정보가 수정되었습니다.');
+      window.location.href = '/html/modiIf.html';
     }
   }
 
@@ -230,7 +223,7 @@ $submitBt.onclick = async e => {
     await fetch(`/users/${user.id}`, {
       method: 'PATCH',
       headers: { 'content-Type': 'application/json' },
-      body: JSON.stringify({name: `${$modiIfName.value}`})
+      body: JSON.stringify({name: $modiIfName.value})
     })
   }
   // DB로 비밀번호 정보 보내기
@@ -238,14 +231,14 @@ $submitBt.onclick = async e => {
     await fetch(`/users/${user.id}`, {
       method: 'PATCH',
       headers: { 'content-Type': 'application/json' },
-      body: JSON.stringify({pw: `${$modiIfPw.value}`})
+      body: JSON.stringify({pw: $modiIfPw.value})
     })
   }
   // DB로 장르 정보 보내기
   await fetch(`/users/${user.id}`, {
     method: 'PATCH',
     headers: { 'content-Type': 'application/json' },
-    body: JSON.stringify({genre: `${modifiedGenre}`})
+    body: JSON.stringify({genre: modifiedGenre})
   })
 }
 

@@ -1,16 +1,13 @@
 // localStorage User정보
 const currUser = JSON.parse(localStorage.getItem('login'));
-
 // Doms
 const $searchForm = document.querySelector('.search-form');
 const $searchBar = document.querySelector('.search-bar');
 const $resultMovies = document.querySelector('.result__movies');
 const $logoutBtn = document.querySelector('.logout-btn');
-
 // States
 let pageCount = 1;
 let inputValue = '';
-
 //event handler
 // 검색 API로 화면에 렌더하기 함수
 const movieRender = async () => {
@@ -37,13 +34,11 @@ const movieRender = async () => {
     console.log(err);
   }
 }
-
 // top버튼 디스플레이 함수
 const displayTopbtn = _.throttle(() => {
   if(window.scrollY) $topBtn.style.display = 'block';
   else $topBtn.style.display = 'none';
 }, 300) 
-
 window.onload = e => {
   if (!currUser) {
     // 미 로그인 시 로그인 페이지로 이동
@@ -53,29 +48,21 @@ window.onload = e => {
   document.querySelector('.main__name').textContent = currUser.name;
   displayTopbtn();
 }
-
 $searchForm.onsubmit = e => {
   e.preventDefault();
-  if($resultMovies.children.length) return;
+  pageCount = 1;
+  $resultMovies.innerHTML = '';
   movieRender();
 }
-
-$searchBar.onchange = e => {
-  if(inputValue !== $searchBar.value) $resultMovies.innerHTML = '';
-  pageCount = 1;
-}
-
 // 더보기 버튼 클릭시 다음 페이지 렌더링
 $moreBtn.onclick = e => {
   movieRender();
 }
-
 // (아래는 안해도 상관X)
 // 로그아웃 버튼
 $logoutBtn.onclick = e => {
   localStorage.removeItem('login');
 }
-
 // 스크롤 top 버튼
 $topBtn.onclick = e => {
   window.scroll({
@@ -83,7 +70,6 @@ $topBtn.onclick = e => {
     behavior: 'smooth'
   });
 }
-
 // 스크롤 최상단 시 top 버튼 안보이기
 window.onscroll = e => {
   displayTopbtn();

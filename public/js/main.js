@@ -141,12 +141,6 @@ const clickBtn = ($button, $ul) => {
   allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"></iframe>`;
 })();
 
-(async function () {
-  const users = await fetch(`/users/${localUser.id}`);
-  const { bookmarks } = await users.json();
-  getBookmarks = bookmarks ? bookmarks : [];
-})();
-
 // 스크롤 이벤트
 $topBtn.onclick = () => {
   window.scroll({
