@@ -42,10 +42,6 @@ let pageCount = 1;
   });
 })();
 
-console.log(genres);
-
-
-
 const pagenationBt = async direction => {
 
   // 이전버튼 숨기기

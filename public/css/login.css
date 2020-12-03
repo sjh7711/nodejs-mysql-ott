@@ -61,8 +61,11 @@ h2 {
 
 .inputBox:hover {
   caret-color: #fff;
-  background-color: #800000;
+  background-color: #646464;
+}
 
+.inputBox::placeholder {
+  color: rgb(216, 216, 216);
 }
 
 input[type=button]:hover {

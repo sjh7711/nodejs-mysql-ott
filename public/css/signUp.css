@@ -97,8 +97,12 @@ legend {
 }
 
 .signUp-input:hover {
-  background-color: #800000;
+  background-color: #646464;
   caret-color: #ffffff;
+}
+
+.signUp-input::placeholder {
+  color: rgb(216, 216, 216);
 }
 
 .errorColor {
