@@ -79,7 +79,7 @@ legend {
   transform: translate(-50%, -50%);
 }
 
-.modiIf>h2 {
+.modiIfForm>h2 {
   font-size: 32px;
   font-weight: 700;
   color: #ffffff;
@@ -158,6 +158,14 @@ legend {
 .modiIf-bt:hover {
   background: #ff4500;
   text-decoration: underline;
+}
+
+.disabledBt {
+  background: #a1a1a1;
+}
+
+.disabledBt:hover {
+  background: #a1a1a1;
 }
 
 .cancle-bt {
