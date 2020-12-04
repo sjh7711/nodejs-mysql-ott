@@ -103,7 +103,7 @@ a.logout-btn:hover {
 
 .popup__video {
   background-color: rgb(27, 27, 27);
-  height: 350px;
+  height: 330px;
   overflow: hidden;
   position: relative;
 }

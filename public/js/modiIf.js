@@ -157,7 +157,6 @@ $modiIf.addEventListener("focusout", async e => {
       showGreenInput($modiIfCurPw);
       $modiIfCurPw.nextElementSibling.textContent = '';
     }
-  }
 
   // 변경된 비밀번호와 현재 비밀번호 다른지 확인
   if (e.target.id === 'pw') {
