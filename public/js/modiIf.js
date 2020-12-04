@@ -86,16 +86,15 @@ $penIcon.onclick = e => {
 $modiIfName.oninput = e => {
   const reg = /^[A-Za-z0-9가-힣+]*$/g;
 
-  (!reg.test(e.target.value))
-    ? (
-      showErrorInput(e.target),
-      e.target.nextElementSibling.textContent = '이름을 올바르게 입력해주세요.'
-    ) : (
-      e.target.classList.remove('errorColor'),
-      e.target.nextElementSibling.textContent = '',
-      // 기존값과 바뀌면 초록색으로 색변경
-      showChangedNameInput(e.target)
-    )
+  if (!reg.test(e.target.value)) {
+    showErrorInput(e.target);
+    e.target.nextElementSibling.textContent = '이름을 올바르게 입력해주세요.';
+  } else {
+    e.target.classList.remove('errorColor');
+    e.target.nextElementSibling.textContent = '';
+    // 기존값과 바뀌면 초록색으로 색변경
+    showChangedNameInput(e.target)
+  }
 }
 
 // 비밀번호 옆 펜아이콘 클릭 이벤트
@@ -148,10 +147,9 @@ $modiIf.addEventListener("focusout", async e => {
   if (!e.target.matches('.pw')) return;
 
   // 현재 비밀번호 확인
-  if (e.target.id === 'curPw') {
     const res = await fetch(`/users/${user.id}`);
     const userInfo = await res.json();
-    if (userInfo.pw !== e.target.value) {
+    if (e.target.id === 'curPw' && userInfo.pw !== e.target.value) {
       showErrorInput($modiIfCurPw);
       $modiIfCurPw.nextElementSibling.textContent = '현재 비밀번호가 올바르지 않습니다.';
       return;
@@ -183,10 +181,9 @@ $modiIf.addEventListener("focusout", async e => {
   }
 
   // 변경된 비밀번호와 재입력 일치여부 확인
-  if (e.target.id === 'rePw') {
-    if ($modiIfPw.value !== $modiIfRePw.value) {
+    if (e.target.id === 'rePw' && $modiIfPw.value !== $modiIfRePw.value) {
       showErrorInput($modiIfRePw);
-      $modiIfRePw.nextElementSibling.textContent = '비밀번호가 서로 다릅니다.'
+      $modiIfRePw.nextElementSibling.textContent = '비밀번호가 서로 다릅니다.';
       return;
     } else if ($modiIfPw.classList.contains('errorColor')) {
       showErrorInput($modiIfRePw);
@@ -194,7 +191,6 @@ $modiIf.addEventListener("focusout", async e => {
       showGreenInput($modiIfRePw);
       $modiIfRePw.nextElementSibling.textContent = '';
     }
-  }
 });
 
 // 수정완료 버튼 클릭 이벤트
@@ -208,10 +204,9 @@ $submitBt.onclick = async e => {
     ? modifiedGenre = user.genre
     : modifiedGenre = selectedGenre
 
-  // errorColor가 존재하면 에러메세지 출력하고 return
-  if ([...$modiIfForm.children].find(input => input.classList.contains('errorColor')) || [...$iconInput].find(div => div.querySelector('input').classList.contains('errorColor'))) {
-    $completedMessage.textContent = '정보를 올바르게 입력해 주세요.'
-    return;
+  // errorColor가 존재하면 에러메세지 출력
+  if (document.querySelector('.errorColor')) {
+    $completedMessage.textContent = '정보를 올바르게 입력해 주세요.';
   } else {
     $completedMessage.textContent = '';
     const confirmAlert = confirm('회원정보를 수정하시겠습니까?');
