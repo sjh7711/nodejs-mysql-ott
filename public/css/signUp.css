@@ -73,7 +73,7 @@ legend {
   background-color: rgb(9 7 7);
   display: flex;
   flex-direction: column;
-  padding: 60px 68px 40px 68px;
+  padding: 60px 68px;
   width: 450px;
   border-radius: 15px;
 }
@@ -85,10 +85,10 @@ legend {
   margin-bottom: 20px;
 }
 
-.signUp-content {
+.signUp-input {
   width: 100%;
-  margin: 10px 0;
   height: 50px;
+  margin: 10px 0;
   padding: 16px;
   border-radius: 4px;
   border: 0;
@@ -96,30 +96,39 @@ legend {
   color: #ffffff;
 }
 
-.signUp-content:hover {
-  background-color: #800000;
+.signUp-input:hover {
+  background-color: #646464;
   caret-color: #ffffff;
 }
 
+.signUp-input::placeholder {
+  color: rgb(216, 216, 216);
+}
+
 .errorColor {
-  background-color: #800000;
+  border: 3px solid #800000;
+}
+
+.correctColor {
+  border: 3px solid rgb(27, 102, 4);
 }
 
 .alert {
-  padding-left: 10px;
+  text-indent: 12px;
   color: red;
+  font-size: 12px;
 }
 
 .signUp-bt {
   display: inline-block;
   width: 47%;
-  height: 50px;
+  height: 45px;
   font-size: 16px;
   color: #ffffff;
   background: #e50914;
   border: 0;
   border-radius: 4px;
-  margin-top: 16px;
+  margin-top: 30px;
   cursor: pointer;
 }
 
@@ -137,10 +146,10 @@ legend {
 }
 
 .preference {
-  margin-top: 20px;
+  margin: 16px auto 12px;
   width: 100%;
   /* 원하는 너비설정 */
-  padding: 15px;
+  padding: 12px;
   /* 여백으로 높이 설정 */
   border: 1px solid #999;
   border-radius: 4px;
@@ -150,4 +159,14 @@ legend {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+}
+.guideMessage{
+  display: none;
+  margin-top: 15px;
+  text-indent: 12px;
+  color: red;
+  font-size: 12px;
+}
+.guideMessageActive{
+  display: block;
 }

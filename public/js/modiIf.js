@@ -1,188 +1,273 @@
-// 로컬스토리지에 데이터를 쌓이게 해준다.
-let user = JSON.parse(localStorage.getItem('login'));
+const user = JSON.parse(localStorage.getItem('login'));
 
-// 만약 로그인이 되지 않은상태로 접근시 로그인페이지로 이동시킴
-if(!user.curlog) {
-  window.location.href = '/';
-}
+const $modiIfContent = document.querySelectorAll('.modiIf-content');
+const $pw = document.querySelectorAll('.pw');
+const $iconInput = document.querySelectorAll('.iconInput');
 
-// 만약 로그인안한 상태로 페이지에 접근할 경우
-// 로컬스토리지에 찾으려는 값이 없는경우 null이 반환된다.
-// if(!localStorage.getItem('login')) window.location.href = '/';
-
-const $modiIfBt = document.querySelector('.modiIf-bt');
+const $modiIf = document.querySelector('.modiIf');
+const $modiIfForm = document.querySelector('.modiIfForm');
 const $modiIfName = document.querySelector('.modiIf-name');
 const $modiIfId = document.querySelector('.modiIf-id');
-const $modiIfPw = document.querySelector('.modiIf-pw');
-const $modiIfRepw = document.querySelector('.modiIf-repw');
 const $modiIfCurPw = document.querySelector('.modiIf-curPw');
-const $modiIfContent = document.querySelectorAll('.modiIf-content');
-const $pws = document.querySelectorAll('.pw');
-const $preference = document.querySelector('.preference');
+const $modiIfPw = document.querySelector('.modiIf-pw');
+const $modiIfRePw = document.querySelector('.modiIf-rePw');
+const $penIcon = document.querySelector('.penIcon');
+const $penIcon2 = document.querySelector('.penIcon2');
+const $nameMessage = document.querySelector('.nameMessage');
 const $completedMessage = document.querySelector('.completedMessage');
-const $modiBt = document.querySelectorAll('.modi-bt');
-const $cancle = document.querySelector('.cancle');
-const $message = document.querySelector('.message');
+const $pwMessage = document.querySelector('.pwMessage');
+const $submitBt = document.querySelector('.submit-bt');
+const $cancleBt = document.querySelector('.cancle-bt');
+const $preference = document.querySelector('.preference');
 
-// 회원수정 페이지로 왔을때 input value 값 로그인되어있는 아이디 값으로 각각 초기화 해준다.
-[...$modiIfContent].forEach(input => {
-  let key = `${input.id === 'pw' || input.id === 'repw' ? '' : input.id}`
-
-  input.value = `${user[key] ? user[key] : ''}`;
-});
-
-// 비밀번호 서로 다른지 확인
-const comparePw = (Pwelement) => {
-  Pwelement.classList.add('errorColor');
-  Pwelement.nextElementSibling.textContent = '비밀번호가 서로 다릅니다.';
+// 미로그인 시 로그인 화면으로 이동
+if (!user.curlog) {
+  window.location('/')
 };
 
-$modiIfBt.onclick = async e => {
+// localStorage에서 기존 정보 가져오기
+$modiIfName.value = user.name;
+$modiIfId.value = user.id;
 
-  let errorCount = 0;
-  let pwErrorCount = 0;
+const showErrorInput = (input) => {
+  if(input.classList.contains('changedColor')) {
+    input.classList.remove('changedColor');
+  }
+  input.classList.add('errorColor');
+};
 
-  // 에러메세지 초기화
-  [...$modiIfContent].forEach(modiIfInput => {
-    // 값을 올바르게 입력한후 다시 제출이벤트를 했을때 이전의 에러 메세지를 지워준다.
-    modiIfInput.nextElementSibling.textContent = '';
+const showGreenInput = (input) => {
+  if(input.classList.contains('errorColor')) {
+    input.classList.remove('errorColor');
+    input.nextElementSibling.textContent = '';
+  }
+  input.classList.add('changedColor');
+}
 
-    // 값을 올바르게 입력한후 다시 제출이벤트를 했을때 이전의 에러 색깔을 지워준다.
-    modiIfInput.classList.remove('errorColor');
-  });  
-
-  // 기존의 이름과 동일한경우 에러메세지 넣어주기.
-  // 이름 인풋창이 비어있거나, 기존 이름과 동일한 경우
-  // 이름 인풋에서만 에러가 발생할 수 있게한다.
-
-  // 장르를 수정해준다.
-  const index = $preference.selectedIndex;
-
-  // 현재 비밀번호가 비어있거나
-  // 현재 비밀번호가 있을경우
-  if ($modiIfCurPw.value === '') { //현재 비밀번호가 비어있는 경우
-    if($preference.options[index].value) { // 장르 선택을 했다면 택한 값을 서버에 넣어준다.
-      user.genre = $preference.options[index].value;
-    } else if ($modiIfName.value === user.name) { // 기존의 이름과 동일한 경우
-      $modiIfName.nextElementSibling.textContent = '기존의 이름과 동일합니다.';
-      ++errorCount;
-    } else if($modiIfName.value === '') { // 이름 인풋창이 비어있는 경우
-      $modiIfName.nextElementSibling.textContent = '이름을 입력해주십시오.';
-      ++errorCount;
-    }
-  } else { // 현재 비밀번호가 있는경우
-    if($modiIfName.value === '') { // 이름 인풋창이 비어있는 경우
-      $modiIfName.nextElementSibling.textContent = '이름을 입력해주십시오.';
-      ++errorCount;
+const showChangedNameInput = (input) => {
+  if (input.value !== user.name) {
+    showGreenInput(input);
+  } else {
+    if (input.classList.contains('changedColor')){
+      input.classList.remove('changedColor')
     }
   }
+}
 
-  // pw 인풋 태그들이 비어있는지 확인
-  // 인풋창이 비어있지 않은 경우에만 배열에 할당
-  const checkPwEmty = [...$pws].filter(pw => pw.value).length;
+// Event Handler
+// 이름 옆 펜아이콘 클릭 이벤트
+$penIcon.onclick = e => {
+  $modiIfName.toggleAttribute('disabled');
+  $modiIfName.classList.toggle('activeColor');
+  $penIcon.classList.toggle('activePenColor');
 
-  // 만약 checkPwEmty이 0이면 인풋창에 아무것도 들어있지 않는다.
-  // 양수인 경우에만 인풋창에 값이 들어가 있다.
+  const input = e.target.nextElementSibling;
+  
+  // 이름 변경 안내메세지 보이기
+  if (input.classList.contains('activeColor')){
+    $nameMessage.style.display = 'block';
+  } else {
+    $nameMessage.style.display = 'none';
+  }
+}
 
-  // 비어있지 않은 경우에만 비밀번호 에러메세지를 날려준다.
-  if (checkPwEmty) {
-    // 비밀번호와 비빌번호 재입력을 비교해 같은지 비교한다.
-    if ($modiIfPw.value !== $modiIfRepw.value) {
-      comparePw($modiIfPw);
-      comparePw($modiIfRepw);
-      $completedMessage.textContent = '';
-      ++pwErrorCount;
-    }
+// 스페이스 바 입력 방지 이벤트
+[...$modiIf.children].forEach(child => 
+  child.onkeydown = e => {
+  if (!e.target.matches('.modiIf input')) return;
 
-    // let user = JSON.parse(localStorage.getItem('login'));
+  const kcode = e.keyCode;
+  if(kcode === 32) return false;
+})
 
-    // 현재비밀번호 가져오기
-    const curPwRes = await fetch(`/users/${user.id}`);
-    const modiUser = await curPwRes.json();
+// 이름 input에 값 입력되었을 때
+// 1. 정규표현식으로 검사
+// 2. 이름 변경 시 초록색으로 input창 변경
+$modiIfName.oninput = e => {
+  const reg = /^[A-Za-z0-9가-힣+]*$/g;
 
-    // 현재 비밀번호와 입력한 비밀번호가 같은지 확인한다.
-    if ($modiIfCurPw.value !== modiUser.pw) {
-      comparePw($modiIfCurPw);
-      $modiIfCurPw.nextElementSibling.textContent = '현재 비밀번호와 입력한 비밀번호가 동일 하지않습니다.'
-      ++pwErrorCount;
-    } else if($modiIfPw.value === modiUser.pw && $modiIfRepw.value === modiUser.pw) { // 변경하려는 비밀번호가 기존의 비밀번호와 일치한지 비교
-      $completedMessage.textContent = '기존의 비밀번호와 동일합니다.';
-      ++pwErrorCount;
-    }
+  if (!reg.test(e.target.value)) {
+    showErrorInput(e.target);
+    e.target.nextElementSibling.textContent = '이름을 올바르게 입력해주세요.';
+  } else {
+    e.target.classList.remove('errorColor');
+    e.target.nextElementSibling.textContent = '';
+    // 기존값과 바뀌면 초록색으로 색변경
+    showChangedNameInput(e.target)
+  }
+}
 
-    // 비밀번호 인풋창이 비어있는 경우
-    [...$pws].forEach(pw => {
-      if (pw.value === '') {
-        // 경고메세지를 생성해 그다음 요소로 넣어준다.
-        pw.classList.add('errorColor');
-        pw.nextElementSibling.textContent = '비밀번호를 입력해주십시오.';
-        ++pwErrorCount;
+// 비밀번호 옆 펜아이콘 클릭 이벤트
+$penIcon2.onclick = e => {
+  const input = e.target.nextElementSibling;
+  [...$pw].forEach(input => input.toggleAttribute('disabled'));
+  [...$pw].forEach(input => input.classList.toggle('activeColor'));
+  $penIcon2.classList.toggle('activePenColor');
+
+  // 비밀번호 변경 안내 메세지 보이기
+  if (input.classList.contains('activeColor')){
+    $pwMessage.style.display = 'block';
+  } else {
+    $pwMessage.style.display = 'none';
+  }
+
+  // 모두 빈칸이면 border 변화없이 놔두기
+  if ([...$pw].every(input => !input.value)) {
+    [...$pw].forEach(input => {
+      if (input.classList.contains('changedColor')) {
+        input.classList.remove('changedColor');
+        input.nextElementSibling.textContent = ''
+      } else if (input.classList.contains('errorColor')) {
+        input.classList.remove('errorColor');
+        input.nextElementSibling.textContent = ''
       }
-    });
-
-    // 비밀번호를 수정해준다.
-    if (pwErrorCount > 0) return;
-
-    const modiPwRes = await fetch(`/users/${user.id}`, {
-      method:'PATCH',
-      headers: { 'content-Type': 'application/json' },
-      body: JSON.stringify({pw : `${$modiIfPw.value}`})
-    });
-  
-    //수정된 비밀번호를 서버에서 불러와서 pw input에 value값으로 넣어준다.
-    const modiPwUser = await modiPwRes.json();
-    $modiIfPw.value = modiPwUser.pw;
-    $modiIfRepw.value = modiPwUser.pw;
-  };
-  
-  // 에러가 있으면 count 개수를 늘려 만약 양수인경우 함수를 중단시킨다.
-  if (errorCount > 0) return;
-
-  // 로컬스토리지 수정
-  localStorage.setItem('login',
-  JSON.stringify({
-    id: user.id,
-    name: $modiIfName.value,
-    genre: $preference.options[index].value ? $preference.options[index].value : user.genre, // 비어있으면 기존의 장르를 넣어준다, 비어있지 않으면 선택한 값을 넣어준다.
-    savelog: user.saveLogin,
-    curlog: user.curlog
-  }));
-
-
-
-  // localStorage.clear();
-
-  // 이름 수정시켜준다.
-  // fetch주소 로그인 id로 수정시켜주기
-  const modiNameRes = await fetch(`/users/${user.id}`, {
-      method:'PATCH',
-      headers: { 'content-Type': 'application/json' },
-      body: JSON.stringify({name : `${$modiIfName.value}`})
-  });
-
-  if(index > 0) {
-    const modiGenRes = await fetch(`/users/${user.id}`, {
-      method:'PATCH', 
-      headers: { 'content-Type': 'application/json' },
-      body: JSON.stringify({genre : `${$preference.options[index].value}`})
-    });
+    })
   }
+}
 
-  //수정된 이름을 서버에서 불러와서 name input에 value값으로 넣어준다.
-  const modiNameUser = await modiNameRes.json();
-  $modiIfName.value = modiNameUser.name;
-  
-  console.log('Perfect');
-  $completedMessage.textContent = '수정이 완료되었습니다.'
+let regError = 0;
+
+// keydomn 시 비밀번호 정규표현식 조건 확인 이벤트
+$modiIf.onkeydown = e => {
+  if (!e.target.classList.contains('pw')) return;
+
+  const regPw = /^[A-Za-z0-9+]{4,15}$/;
+  if (!regPw.test(e.target.value)){
+    e.target.nextElementSibling.textContent = '비밀번호는 4~12자, 영어와 숫자로 입력해 주세요.';
+    regError = 1;
+  } else {
+    e.target.nextElementSibling.textContent = '';
+    regError = 0;
+  }
 };
 
-// 취소하기 버튼 클릭시 이전 페이지로 넘어간다.
-$cancle.onclick = () => {
-  window.history.go(-1);
-};
+// input창 focusout 이벤트
+// 비밀번호 input창 조건 확인
+$modiIf.addEventListener("focusout", async e => {
+  if (!e.target.matches('.pw')) return;
 
-[...$pws].forEach(pw => {
-  pw.onfocus = () => {
-    $message.classList.add('active');
+  // 현재 비밀번호 확인
+    const res = await fetch(`/users/${user.id}`);
+    const userInfo = await res.json();
+    if (e.target.id === 'curPw' && userInfo.pw !== e.target.value) {
+      showErrorInput($modiIfCurPw);
+      $modiIfCurPw.nextElementSibling.textContent = '현재 비밀번호가 올바르지 않습니다.';
+      return;
+    } else {
+      showGreenInput($modiIfCurPw);
+      $modiIfCurPw.nextElementSibling.textContent = '';
+    }
+
+  // 변경된 비밀번호와 현재 비밀번호 다른지 확인
+  if (e.target.id === 'pw') {
+    const res = await fetch(`/users/${user.id}`);
+    const userInfo = await res.json();
+    if ( regError > 0 ) {
+      showErrorInput($modiIfPw);
+      return;
+    } else if (userInfo.pw === $modiIfPw.value) {
+      showErrorInput($modiIfPw);
+      $modiIfPw.nextElementSibling.textContent = '기존 비밀번호와 동일합니다.';
+      return;
+    } else if (!$modiIfPw.value) {
+      showErrorInput($modiIfPw);
+      $modiIfPw.nextElementSibling.textContent = '';
+      return;
+    } else {
+      showGreenInput($modiIfPw);
+      $modiIfPw.nextElementSibling.textContent = '';
+    }
   }
+
+  // 변경된 비밀번호와 재입력 일치여부 확인
+    if (e.target.id === 'rePw' && $modiIfPw.value !== $modiIfRePw.value) {
+      showErrorInput($modiIfRePw);
+      $modiIfRePw.nextElementSibling.textContent = '비밀번호가 서로 다릅니다.';
+      return;
+    } else if ($modiIfPw.classList.contains('errorColor')) {
+      showErrorInput($modiIfRePw);
+    } else {
+      showGreenInput($modiIfRePw);
+      $modiIfRePw.nextElementSibling.textContent = '';
+    }
 });
+
+// 수정완료 버튼 클릭 이벤트
+$submitBt.onclick = async e => {
+  e.preventDefault();
+
+  // 장르 변경 시 변경된 장르 적용
+  const selectedGenre = $preference.options[$preference.selectedIndex].value;
+  let modifiedGenre;
+  ( selectedGenre === 'none' || selectedGenre === user.genre ) 
+    ? modifiedGenre = user.genre
+    : modifiedGenre = selectedGenre
+
+  // errorColor가 존재하면 에러메세지 출력
+  if (document.querySelector('.errorColor')) {
+    $completedMessage.textContent = '정보를 올바르게 입력해 주세요.';
+  } else {
+    $completedMessage.textContent = '';
+    const confirmAlert = confirm('회원정보를 수정하시겠습니까?');
+    if (confirmAlert) {
+      alert('회원정보가 수정되었습니다.');
+
+      // localStorage로 바뀐 정보 보내기
+      localStorage.setItem('login', 
+      JSON.stringify({
+        id: user.id,
+        name: $modiIfName.value,
+        genre: modifiedGenre,
+        savelog: user.savelog,
+        curlog: user.curlog
+      }))
+      
+      // DB로 바뀐 정보 보내기(이름, 비밀번호, 장르)
+      // DB로 이름 정보 보내기
+      if ($modiIfName.classList.contains('changedColor')) {
+        await fetch(`/users/${user.id}`, {
+          method: 'PATCH',
+          headers: { 'content-Type': 'application/json' },
+          body: JSON.stringify({name :$modiIfName.value})
+        })
+      };
+
+      // DB로 비밀번호 정보 보내기
+      if ($modiIfPw.classList.contains('changedColor')) {
+        await fetch(`/users/${user.id}`, {
+          method: 'PATCH',
+          headers: { 'content-Type': 'application/json' },
+          body: JSON.stringify({pw : $modiIfPw.value})
+        })
+      };
+
+      // DB로 장르 정보 보내기
+      await fetch(`/users/${user.id}`, {
+        method: 'PATCH',
+        headers: { 'content-Type': 'application/json' },
+        body: JSON.stringify({genre: modifiedGenre})
+      });
+
+      [...$modiIfContent].forEach(input => {        
+        if (input.classList.contains('changedColor')) {
+          input.classList.remove('changedColor');
+        } 
+        if (input.classList.contains('activeColor')) {
+          input.classList.remove('activeColor');
+        }
+        if (input.classList.contains('pw')){
+          input.value = '';
+        } 
+        if (!input.hasAttribute('disabled')) {
+          input.setAttribute('disabled', 'true');
+        }
+        input.nextElementSibling.textContent = ''
+      });
+    }  
+  }
+}
+
+// 뒤로가기 클릭 이벤트
+$cancleBt.onclick = () => {
+  window.history.back();
+}

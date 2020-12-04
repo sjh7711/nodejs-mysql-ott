@@ -1,4 +1,4 @@
-
+// Event Handler
 $signUpForm.onsubmit = async e => {
   let count = 0;
 
@@ -34,7 +34,7 @@ $signUpForm.onsubmit = async e => {
       // 만약 input 뒤에 예전에 생성한 경고메세지가 남아있으면 지워준다.
 
       // 경고메세지를 생성해 그다음 요소로 넣어준다.
-      input.classList.add('errorColor');
+      input.classList.add('errorColor'); // 에러컬러 클래스를 넣어준다
       input.nextElementSibling.textContent = `${input.id === 'name' ? '이름을 넣어주십시오.' : input.id === 'id' ? '아이디를 입력해 주십시오' : '비밀번호를 입력해 주십시오.'}`;
       ++count;
     }

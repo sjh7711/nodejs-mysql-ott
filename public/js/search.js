@@ -1,4 +1,4 @@
-const $searchBar2 = document.getElementById("search-bar2");
+const $searchBar = document.getElementById("search-bar");
 const $searchForm = document.querySelector(".search-form");
 const $searchFormTop = document.querySelector(".search-form-top");
 const $result = document.querySelector(".result");
@@ -21,7 +21,6 @@ $main__name.innerHTML = user.name;
 // 더보기 버튼 클릭시 다음 페이지 렌더링
 $moreBtn.onclick = () => {
   ++i
-  console.log(i);
   render();
 };
 
@@ -39,10 +38,9 @@ $searchForm.onsubmit = e => {
 const render = async () => {
   try { 
     const resMovie = await fetch(
-      `https://api.themoviedb.org/3/search/movie?api_key=${api_key}&language=ko&query=${$searchBar2.value}&page=${i}&include_adult=false`
+      `https://api.themoviedb.org/3/search/movie?api_key=${api_key}&language=ko&query=${$searchBar.value}&page=${i}&include_adult=false`
       );
     const { results } = await resMovie.json();
-    console.log(results);
     if (results.length !== 20) {
       $moreBtn.style.display = 'none';
     }
@@ -58,9 +56,9 @@ const render = async () => {
         $img.src = `https://image.tmdb.org/t/p/w500/${movie.poster_path}`;
       }
       const textNode = document.createTextNode(movie.title);
--     $a.appendChild($img);
--     $a.appendChild(textNode);
--     $li.appendChild($a);
+      $a.appendChild($img);
+      $a.appendChild(textNode);
+      $li.appendChild($a);
       $fragment.appendChild($li);
       $result__movies.appendChild($fragment);
     })

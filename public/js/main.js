@@ -1,7 +1,3 @@
-// if (!localUser.curlog) {
-//   window.location.href = "../index.html";
-// }
-
 const lang = "ko";
 const imgBase = "https://image.tmdb.org/t/p/w500/";
 const $logOut = document.getElementById("logout");
@@ -56,8 +52,8 @@ const getMovieList = async (getValue, $ul) => {
     );
     const { genres } = await genreRes.json();
     genreList = genres;
-    console.log(genreList);
   }
+  
   const url =
     getValue === "favorite"
       ? `https://api.themoviedb.org/3/discover/movie?api_key=${api_key}&with_genres=${
@@ -122,6 +118,7 @@ const clickBtn = ($button, $ul) => {
 [...$movieLists].forEach($list => {
   getMovieList($list.id, $list.querySelector("ul"));
 });
+
 [...$movieLists].forEach(($section) => {
   $section.querySelector("ul").style.transform = `translateX(${-(
     4 * liWidth
@@ -142,11 +139,6 @@ const clickBtn = ($button, $ul) => {
   ).innerHTML = `<iframe src="https://www.youtube.com/embed/${results[0].key}?autoplay=1&mute=1&controls=0&rel=0&loop=1&playlist=${results[0].key}" 
   frameborder="0" style="width: 100vw; height: 100%;"
   allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"></iframe>`;
-})();
-(async function () {
-  const users = await fetch(`/users/${localUser.id}`);
-  const { bookmarks } = await users.json();
-  getBookmarks = bookmarks ? bookmarks : [];
 })();
 
 // 스크롤 이벤트
@@ -171,24 +163,3 @@ $logOut.onclick = (e) => {
     })
   );
 };
-
-// 메인에서 장르를 클릭한다.
-// 장르 API에서 id와 내가 클릭한 textContent가 name 일치하면 id를 가져온다.
-
-const $genreList = document.querySelector(".genre-list");
-
-let selectedGenreId;
-$genreList.onclick = async e => {
-  if(!e.target.matches('.genre-list > li > a')) return;
-  console.log(e.target.textContent);
-  const res = await fetch (`https://api.themoviedb.org/3/genre/movie/list?api_key=${api_key}&language=ko`)
-  const { genres } = await res.json();
-  genres.forEach(genre => {
-    if(genre.name === e.target.textContent) {
-      let selectedGenreId = genre.id;
-    }
-  });
-}
-
-const qs = getQueryStringObject();
-console.log(qs);

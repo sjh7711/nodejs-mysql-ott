@@ -27,6 +27,13 @@ const localUser = JSON.parse(localStorage.getItem("login"));
 let selectedId;
 let getBookmarks;
 
+// localStorage와 db에 반영된 북마크 연동하기
+(async function () {
+  const users = await fetch(`/users/${localUser.id}`);
+  const { bookmarks } = await users.json();
+  getBookmarks = bookmarks ? bookmarks : [];
+})();
+
 const popup = (movie, actors) => {
   if (selectedId) $popup__movieName.innerHTML = movie.title;
   $vote.innerHTML =
@@ -37,7 +44,6 @@ const popup = (movie, actors) => {
   $runtime.innerHTML = movie.runtime;
   $actors.innerHTML = actors;
   
-  console.log(getBookmarks);
   if (getBookmarks.indexOf(selectedId) !== -1) {
     $likeBtn.firstElementChild.innerHTML = `찜완료!`;
     $likeBtn.classList.add("liked");
@@ -62,7 +68,6 @@ const modifyBookMarks = async () => {
       }),
     });
     const { bookmarks } = await patchLi.json();
-    console.log(bookmarks);
     getBookmarks = bookmarks;
     $popupVigideo.innerHTML = "";
   } catch (err) {
@@ -110,7 +115,6 @@ $main__container__movies.onclick = async (e) => {
       `https://api.themoviedb.org/3/movie/${selectedId}/videos?api_key=${api_key}`
     );
     const { results } = await resVideo.json();
-    console.log(results);
     console.log(selectedId);
     if (results.length !== 0) {
       $popupVideo.innerHTML = `<iframe width="770" height="350" src="https://www.youtube.com/embed/${results[0].key}?" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
@@ -163,9 +167,3 @@ $overlay.onclick = async () => {
   modifyBookMarks();
 };
 
-// localStorage와 db에 반영된 북마크 연동하기
-(async function () {
-  const users = await fetch(`/users/${localUser.id}`);
-  const { bookmarks } = await users.json();
-  let getBookmarks = bookmarks ? bookmarks : [];
-})();
