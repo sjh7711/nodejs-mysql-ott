@@ -10,7 +10,6 @@ const $pagenationFragment = document.createDocumentFragment();
 
 const parsedUrl = new URL(window.location.href);
 const urlId = parsedUrl.searchParams.get("id");
-console.log(urlId);
 
 let genres = {};
 let selectedGenre = {};
@@ -25,7 +24,6 @@ let pageCount = 1;
   const resGenres = await fetch (`https://api.themoviedb.org/3/genre/movie/list?api_key=${api_key}&language=ko`)
   const results = await resGenres.json();
   genres = results.genres;
-  console.log(genres);
 
   const resDiscover = await fetch(`https://api.themoviedb.org/3/discover/movie?api_key=${api_key}&language=ko&sort_by=popularity.desc&include_adult=false&include_video=false&page=1&with_genres=${urlId}`);
   const { results: movies } = await resDiscover.json();
@@ -37,12 +35,10 @@ let pageCount = 1;
   genres.forEach(genre => {
     if(genre.id === +urlId) {
       selectedGenre = genre.name;
-      console.log(genre.name);
     }
   });
 })();
 
-console.log(genres);
 
 
 
@@ -62,11 +58,13 @@ const pagenationBt = async direction => {
   $main__name.textContent = selectedGenre.name;
   movies.forEach(movie => render(movie));
   $result__movies.appendChild($fragment);
+  console.log(currentPageElement);
 
   // pagenationActive를 초기화 한후 이전페이지에다가 넣어준다. 
   document.querySelector('.pagenationActive').classList.remove('pagenationActive');
   direction === 'pre' ? currentPageElement.parentElement.previousElementSibling.firstElementChild.classList.add('pagenationActive') : currentPageElement.parentElement.nextElementSibling.firstElementChild.classList.add('pagenationActive');
   currentPageElement = document.querySelector('.pagenationActive');
+
 }
 
 // 미 로그인 시 로그인 페이지로 이동
@@ -104,7 +102,6 @@ $genreList.onclick = async e => {
   const res = await fetch(`https://api.themoviedb.org/3/discover/movie?api_key=${api_key}&language=ko&sort_by=popularity.desc&include_adult=false&include_video=false&page=1&with_genres=${urlId}`);
   const { results: movies } = await res.json();
   $main__name.textContent = selectedGenre.name;
-  console.log(movies);
   movies.forEach(movie => render(movie));
   $result__movies.appendChild($fragment);
 }
@@ -181,6 +178,8 @@ $pagenation.onclick = async e => {
   // 클릭한 요소에 pagenationActive를 초기화후 넣어준다.
   document.querySelector('.pagenationActive').classList.remove('pagenationActive');
   e.target.classList.add('pagenationActive');
+
+  currentPageElement = document.querySelector('.pagenationActive');
 };
 
 // 이전버튼을 클릭한경우
@@ -208,7 +207,6 @@ $previousBt.onclick = async () => {
   
       $pagenationFragment.append($li);
     }
-    console.log(pageCount);
 
     // 영화를 표시하는 부분을 초기화해준다.
     $result__movies.textContent = '';
@@ -260,7 +258,6 @@ $nextBt.onclick = async () => {
   
       $pagenationFragment.append($li);
     }
-    console.log(pageCount);
 
     // 영화를 표시하는 부분을 초기화해준다.
     $result__movies.textContent = '';
