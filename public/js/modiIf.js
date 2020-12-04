@@ -20,8 +20,6 @@ const $submitBt = document.querySelector('.submit-bt');
 const $cancleBt = document.querySelector('.cancle-bt');
 const $preference = document.querySelector('.preference');
 
-const regPw = /^[A-Za-z0-9+]{4,15}$/;
-
 // 미로그인 시 로그인 화면으로 이동
 if (!user.curlog) {
   window.location('/')
@@ -128,14 +126,19 @@ $penIcon2.onclick = e => {
   }
 }
 
+let regError = 0;
+
 // keydomn 시 비밀번호 정규표현식 조건 확인 이벤트
 $modiIf.onkeydown = e => {
   if (!e.target.classList.contains('pw')) return;
 
+  const regPw = /^[A-Za-z0-9+]{4,15}$/;
   if (!regPw.test(e.target.value)){
-    e.target.nextElementSibling.textContent = '비밀번호는 4~12자, 영어와 숫자로 입력해 주세요.'
+    e.target.nextElementSibling.textContent = '비밀번호는 4~12자, 영어와 숫자로 입력해 주세요.';
+    regError = 1;
   } else {
     e.target.nextElementSibling.textContent = '';
+    regError = 0;
   }
 };
 
@@ -160,9 +163,19 @@ $modiIf.addEventListener("focusout", async e => {
 
   // 변경된 비밀번호와 현재 비밀번호 다른지 확인
   if (e.target.id === 'pw') {
-    if ($modiIfPw.value === $modiIfCurPw.value) {
+    const res = await fetch(`/users/${user.id}`);
+    const userInfo = await res.json();
+    if ( regError > 0 ) {
+      showErrorInput($modiIfPw);
+      return;
+    } else if (userInfo.pw === $modiIfPw.value) {
       showErrorInput($modiIfPw);
       $modiIfPw.nextElementSibling.textContent = '기존 비밀번호와 동일합니다.';
+      return;
+    } else if (!$modiIfPw.value) {
+      showErrorInput($modiIfPw);
+      $modiIfPw.nextElementSibling.textContent = '';
+      return;
     } else {
       showGreenInput($modiIfPw);
       $modiIfPw.nextElementSibling.textContent = '';
@@ -198,48 +211,66 @@ $submitBt.onclick = async e => {
   // errorColor가 존재하면 에러메세지 출력하고 return
   if ([...$modiIfForm.children].find(input => input.classList.contains('errorColor')) || [...$iconInput].find(div => div.querySelector('input').classList.contains('errorColor'))) {
     $completedMessage.textContent = '정보를 올바르게 입력해 주세요.'
+    return;
   } else {
     $completedMessage.textContent = '';
     const confirmAlert = confirm('회원정보를 수정하시겠습니까?');
     if (confirmAlert) {
       alert('회원정보가 수정되었습니다.');
-      window.location.href = '/html/modiIf.html';
-    }
-  }
 
-  // localStorage로 바뀐 정보 보내기
-  localStorage.setItem('login', 
-    JSON.stringify({
-      id: user.id,
-      name: $modiIfName.value,
-      genre: modifiedGenre,
-      savelog: user.savelog,
-      curlog: user.curlog
-    }))
-  
-  // DB로 바뀐 정보 보내기(이름, 비밀번호, 장르)
-  // DB로 이름 정보 보내기
-  if ($modiIfName.classList.contains('changedColor')) {
-    await fetch(`/users/${user.id}`, {
-      method: 'PATCH',
-      headers: { 'content-Type': 'application/json' },
-      body: JSON.stringify({name: $modiIfName.value})
-    })
+      // localStorage로 바뀐 정보 보내기
+      localStorage.setItem('login', 
+      JSON.stringify({
+        id: user.id,
+        name: $modiIfName.value,
+        genre: modifiedGenre,
+        savelog: user.savelog,
+        curlog: user.curlog
+      }))
+      
+      // DB로 바뀐 정보 보내기(이름, 비밀번호, 장르)
+      // DB로 이름 정보 보내기
+      if ($modiIfName.classList.contains('changedColor')) {
+        await fetch(`/users/${user.id}`, {
+          method: 'PATCH',
+          headers: { 'content-Type': 'application/json' },
+          body: JSON.stringify({name :$modiIfName.value})
+        })
+      };
+
+      // DB로 비밀번호 정보 보내기
+      if ($modiIfPw.classList.contains('changedColor')) {
+        await fetch(`/users/${user.id}`, {
+          method: 'PATCH',
+          headers: { 'content-Type': 'application/json' },
+          body: JSON.stringify({pw : $modiIfPw.value})
+        })
+      };
+
+      // DB로 장르 정보 보내기
+      await fetch(`/users/${user.id}`, {
+        method: 'PATCH',
+        headers: { 'content-Type': 'application/json' },
+        body: JSON.stringify({genre: modifiedGenre})
+      });
+
+      [...$modiIfContent].forEach(input => {        
+        if (input.classList.contains('changedColor')) {
+          input.classList.remove('changedColor');
+        } 
+        if (input.classList.contains('activeColor')) {
+          input.classList.remove('activeColor');
+        }
+        if (input.classList.contains('pw')){
+          input.value = '';
+        } 
+        if (!input.hasAttribute('disabled')) {
+          input.setAttribute('disabled', 'true');
+        }
+        input.nextElementSibling.textContent = ''
+      });
+    }  
   }
-  // DB로 비밀번호 정보 보내기
-  if ($modiIfPw.classList.contains('changedColor')) {
-    await fetch(`/users/${user.id}`, {
-      method: 'PATCH',
-      headers: { 'content-Type': 'application/json' },
-      body: JSON.stringify({pw: $modiIfPw.value})
-    })
-  }
-  // DB로 장르 정보 보내기
-  await fetch(`/users/${user.id}`, {
-    method: 'PATCH',
-    headers: { 'content-Type': 'application/json' },
-    body: JSON.stringify({genre: modifiedGenre})
-  })
 }
 
 // 뒤로가기 클릭 이벤트

@@ -238,6 +238,7 @@ $topBtn.onclick = () => {
   });
 }
 
+// 로그아웃 버튼
 $logoutBtn.onclick = () => {
   localStorage.setItem(
     "login",
