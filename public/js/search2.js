@@ -39,6 +39,7 @@ const displayTopbtn = _.throttle(() => {
   if(window.scrollY) $topBtn.style.display = 'block';
   else $topBtn.style.display = 'none';
 }, 300) 
+
 window.onload = e => {
   if (!currUser) {
     // 미 로그인 시 로그인 페이지로 이동

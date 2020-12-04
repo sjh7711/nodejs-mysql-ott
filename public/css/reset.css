@@ -1,15 +1,29 @@
-
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
 html {
   font-size: 10px;
-  font-family: 'Noto Sans KR', sans-serif;
+  /* font-family: 'Noto Sans KR', sans-serif; */
 }
 
 
-html,body,h1,h2,h3,h4,h5,h6,dl,dt,dd,fieldset,button,p{
+html,
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+dl,
+dt,
+dd,
+fieldset,
+button,
+p {
   margin: 0;
   padding: 0;
 }
