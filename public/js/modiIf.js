@@ -25,6 +25,10 @@ if (!user.curlog) {
   window.location('/')
 };
 
+// 변경된 비밀번호와 현재 비밀번호 다른지 확인
+// const res = await fetch(`/users/${user.id}`);
+// const userInfo = await res.json();
+
 // localStorage에서 기존 정보 가져오기
 $modiIfName.value = user.name;
 $modiIfId.value = user.id;
@@ -125,19 +129,18 @@ $penIcon2.onclick = e => {
   }
 }
 
-let regError = 0;
 
 // keydomn 시 비밀번호 정규표현식 조건 확인 이벤트
 $modiIf.onkeydown = e => {
   if (!e.target.classList.contains('pw')) return;
 
   const regPw = /^[A-Za-z0-9+]{4,15}$/;
-  if (!regPw.test(e.target.value)){
+  if (!regPw.test(e.target.value) && e.target.id === 'pw'){
     e.target.nextElementSibling.textContent = '비밀번호는 4~12자, 영어와 숫자로 입력해 주세요.';
-    regError = 1;
+    showErrorInput($modiIfPw);
+    showErrorInput($modiIfRepw);
   } else {
     e.target.nextElementSibling.textContent = '';
-    regError = 0;
   }
 };
 
@@ -147,49 +150,66 @@ $modiIf.addEventListener("focusout", async e => {
   if (!e.target.matches('.pw')) return;
 
   // 현재 비밀번호 확인
-    const res = await fetch(`/users/${user.id}`);
-    const userInfo = await res.json();
-    if (e.target.id === 'curPw' && userInfo.pw !== e.target.value) {
-      showErrorInput($modiIfCurPw);
-      $modiIfCurPw.nextElementSibling.textContent = '현재 비밀번호가 올바르지 않습니다.';
-      return;
-    } else {
-      showGreenInput($modiIfCurPw);
-      $modiIfCurPw.nextElementSibling.textContent = '';
-    }
+  const res = await fetch(`/users/${user.id}`);
+  const userInfo = await res.json();
 
-  // 변경된 비밀번호와 현재 비밀번호 다른지 확인
-  if (e.target.id === 'pw') {
-    const res = await fetch(`/users/${user.id}`);
-    const userInfo = await res.json();
-    if ( regError > 0 ) {
-      showErrorInput($modiIfPw);
-      return;
-    } else if (userInfo.pw === $modiIfPw.value) {
-      showErrorInput($modiIfPw);
-      $modiIfPw.nextElementSibling.textContent = '기존 비밀번호와 동일합니다.';
-      return;
-    } else if (!$modiIfPw.value) {
-      showErrorInput($modiIfPw);
-      $modiIfPw.nextElementSibling.textContent = '';
-      return;
-    } else {
-      showGreenInput($modiIfPw);
-      $modiIfPw.nextElementSibling.textContent = '';
-    }
+  if (e.target.id === 'curPw' && userInfo.pw !== e.target.value) {
+    showErrorInput($modiIfCurPw);
+    $modiIfCurPw.nextElementSibling.textContent = '현재 비밀번호가 올바르지 않습니다.';
+  } else if(e.target.id === 'curPw' && userInfo.pw === e.target.value) {
+    showGreenInput($modiIfCurPw);
+    $modiIfCurPw.nextElementSibling.textContent = '';
+  }
+  
+  // 변경된 비밀번호와 재입력 일치여부 확인
+  if (!$modiIfPw.value) {
+    showErrorInput($modiIfPw);
+    showErrorInput($modiIfRePw);
+    $modiIfRePw.nextElementSibling.textContent = '';
+  } else if (userInfo.pw === $modiIfPw.value) {
+    showErrorInput($modiIfPw);
+    $modiIfPw.nextElementSibling.textContent = '기존 비밀번호와 동일합니다.';
+  } else if($modiIfPw.value !== $modiIfRePw.value) {
+    showErrorInput($modiIfPw);
+    showErrorInput($modiIfRePw);
+    $modiIfRePw.nextElementSibling.textContent = '비밀번호가 서로 다릅니다.';
+  } else if($modiIfPw.value === $modiIfRePw.value && userInfo.pw !== $modiIfPw.value && $modiIfPw.value) { // 변경된 비밀번호와 재입력이 같은경우
+    showGreenInput($modiIfPw);
+    showGreenInput($modiIfRePw);
+    $modiIfRePw.nextElementSibling.textContent = '';
   }
 
+  // 변경된 비밀번호와 현재 비밀번호 다른지 확인
+  // if (e.target.id === 'pw') {
+    // 변경된 비밀번호와 현재 비밀번호 다른지 확인
+    // const res = await fetch(`/users/${user.id}`);
+    // const userInfo = await res.json();
+  //   if (userInfo.pw === $modiIfPw.value) {
+  //     showErrorInput($modiIfPw);
+  //     $modiIfPw.nextElementSibling.textContent = '기존 비밀번호와 동일합니다.';
+  //     return;
+  //   } else if (!$modiIfPw.value) {
+  //     showErrorInput($modiIfPw);
+  //     $modiIfPw.nextElementSibling.textContent = '';
+  //     return;
+  //   } else {
+  //     showGreenInput($modiIfPw);
+  //     $modiIfPw.nextElementSibling.textContent = '';
+  //   }
+  // }
+
   // 변경된 비밀번호와 재입력 일치여부 확인
-    if (e.target.id === 'rePw' && $modiIfPw.value !== $modiIfRePw.value) {
-      showErrorInput($modiIfRePw);
-      $modiIfRePw.nextElementSibling.textContent = '비밀번호가 서로 다릅니다.';
-      return;
-    } else if ($modiIfPw.classList.contains('errorColor')) {
-      showErrorInput($modiIfRePw);
-    } else {
-      showGreenInput($modiIfRePw);
-      $modiIfRePw.nextElementSibling.textContent = '';
-    }
+    // if (e.target.id === 'rePw' && $modiIfPw.value !== $modiIfRePw.value) {
+    //   showErrorInput($modiIfPw);
+    //   showErrorInput($modiIfRePw);
+    //   $modiIfRePw.nextElementSibling.textContent = '비밀번호가 서로 다릅니다.';
+    //   return;
+    // } else if ($modiIfPw.classList.contains('errorColor')) {
+    //   showErrorInput($modiIfRePw);
+    // } else {
+    //   showGreenInput($modiIfRePw);
+    //   $modiIfRePw.nextElementSibling.textContent = '';
+    // }
 });
 
 // 수정완료 버튼 클릭 이벤트
