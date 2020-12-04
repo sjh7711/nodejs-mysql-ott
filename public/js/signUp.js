@@ -7,6 +7,10 @@ const $signupPw = document.querySelector('.signup-pw');
 const $signupRepw = document.querySelector('.signup-repw');
 const $signUpInput = document.querySelectorAll('.signUp-input');
 const $preference = document.querySelector('.preference');
+const $guideMessage = document.querySelector('.guideMessage');
+
+let errorCount = 0;
+let checkblankCount = 0;
 
 const showErrorInput = (input) => {
   if(input.classList.contains('correctColor')) {
@@ -96,26 +100,35 @@ const checkValidRepw = (input) => {
 
 // Event Handler
 $signUp.onkeyup = e => {
-  if (!e.target.matches('input')) return;
+  if (!e.target.matches('input')) return false;
   checkblank(e.target);
   if (e.target.id === 'id') checkValidId(e.target);
   if (e.target.id === 'pw') checkValidPw(e.target);
   if (e.target.id === 'repw') checkValidRepw(e.target);
 }
-// [...$signUp].forEach(input => {
-//   input.onkeyup = () => {
-    
-//   }
-// });
+
+$signUp.onkeydown = e => {
+  if (e.keyCode === 32) return false;
+}
 
 $signUpForm.onsubmit = e => {
   e.preventDefault();
+
+  // 인풋창에 값이 없는경우 errorCount값을 늘려준다
+  $signUpInput.forEach(v => {
+    if(v.value === '') errorCount++;
+  });
   
-  if ([...$signUpInput].find(input => input.classList.contains('errorColor'))) return;
+  // 만약 errorCount값이 양수이거나, errorColor를 가진 클래스가 있다면 이벤트를 중단한다.
+  if (document.querySelector('.errorColor') || errorCount > 0) {
+    errorCount = 0;
+    $guideMessage.classList.add('guideMessageActive');
+    return;
+  }
   if ($preference.options[$preference.selectedIndex].value === 'none') {
-  $preference.nextElementSibling.textContent = '선호 장르를 선택해 주세요';
-  return;
-  } 
+    $preference.nextElementSibling.textContent = '선호 장르를 선택해 주세요';
+    return;
+  }
   
   const formData = new FormData($signUpForm);
   const signUp = {};

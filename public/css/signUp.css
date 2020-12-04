@@ -160,3 +160,13 @@ legend {
   flex-direction: row;
   justify-content: space-between;
 }
+.guideMessage{
+  display: none;
+  margin-top: 15px;
+  text-indent: 12px;
+  color: red;
+  font-size: 12px;
+}
+.guideMessageActive{
+  display: block;
+}
