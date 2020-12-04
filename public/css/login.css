@@ -43,28 +43,31 @@ h2 {
 }
 
 .inputBox {
-  margin-top: 20px;
-  margin-bottom: 5px;
-  padding: 0px 8px;
-  border-radius: 4px;
-  width: 100%;
-  height: 50px;
-  background-color: #333;
   border: none;
   outline: none;
+  width: 100%;
+  height: 50px;
+  border-radius: 4px;
+  margin: 10px 0;
+  padding: 16px;
+  background-color: #333;
   color: #fff;
 }
 
-.inputBox {
-  padding-left: 16px;
+.errorColor {
+  border: 3px solid #800000;
 }
 
 .inputBox:hover {
-  caret-color: #fff;
-  background-color: #800000;
+  background-color: #646464;
+  caret-color: #ffffff;
 }
 
-input[type=button]:hover {
+.inputBox::placeholder {
+  color: rgb(216, 216, 216);
+}
+
+.input[type=button]:hover {
   cursor: pointer;
   background-color: #ff4500;
   text-decoration: underline;
@@ -158,4 +161,7 @@ input[type=button]:hover {
 
 .active {
   display: block;
+  text-indent: 12px;
+  color: red;
+  font-size: 12px;
 }
