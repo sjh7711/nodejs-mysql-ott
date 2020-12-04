@@ -1,3 +1,4 @@
+const $signUp = document.querySelector('.signUp');
 const $signUpBt = document.querySelector('.signUp-bt');
 const $signUpForm = document.querySelector('.signUp-form');
 const $signupName = document.querySelector('.signup-name');
@@ -94,14 +95,18 @@ const checkValidRepw = (input) => {
 }
 
 // Event Handler
-[...$signUpInput].forEach(input => {
-  input.onblur = () => {
-    checkblank(input);
-    if (input.id === 'id') checkValidId(input);
-    if (input.id === 'pw') checkValidPw(input);
-    if (input.id === 'repw') checkValidRepw(input);
-  }
-});
+$signUp.onkeyup = e => {
+  if (!e.target.matches('input')) return;
+  checkblank(e.target);
+  if (e.target.id === 'id') checkValidId(e.target);
+  if (e.target.id === 'pw') checkValidPw(e.target);
+  if (e.target.id === 'repw') checkValidRepw(e.target);
+}
+// [...$signUp].forEach(input => {
+//   input.onkeyup = () => {
+    
+//   }
+// });
 
 $signUpForm.onsubmit = e => {
   e.preventDefault();

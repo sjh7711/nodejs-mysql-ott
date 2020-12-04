@@ -39,9 +39,6 @@ let pageCount = 1;
   });
 })();
 
-
-
-
 const pagenationBt = async direction => {
 
   // 이전버튼 숨기기
