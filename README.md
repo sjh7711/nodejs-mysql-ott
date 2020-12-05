@@ -1,7 +1,7 @@
 # WATFLECHA
 > 패스트 캠퍼스 FE스쿨 Javascript 프로젝트에서 진행한 프로젝트 사이트 WATFLICHA입니다.
 
-![main](https://user-images.githubusercontent.com/69497936/101235802-f25a3500-370e-11eb-81aa-2ce0e4dbc169.png)
+![main2](https://user-images.githubusercontent.com/69497936/101235861-73193100-370f-11eb-9358-2a9a36bfc85e.png)
 
 # 프로젝트 목표
 
