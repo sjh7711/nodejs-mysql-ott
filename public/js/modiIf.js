@@ -20,10 +20,17 @@ const $submitBt = document.querySelector('.submit-bt');
 const $cancleBt = document.querySelector('.cancle-bt');
 const $preference = document.querySelector('.preference');
 
+const regId = /^[A-Za-z0-9가-힣]*$/;
+const regPw = /^[A-Za-z0-9]{4,15}$/;
+
 // 미로그인 시 로그인 화면으로 이동
 if (!user.curlog) {
   window.location('/')
 };
+
+// 변경된 비밀번호와 현재 비밀번호 다른지 확인
+// const res = await fetch(`/users/${user.id}`);
+// const userInfo = await res.json();
 
 // localStorage에서 기존 정보 가져오기
 $modiIfName.value = user.name;
@@ -84,9 +91,7 @@ $penIcon.onclick = e => {
 // 1. 정규표현식으로 검사
 // 2. 이름 변경 시 초록색으로 input창 변경
 $modiIfName.oninput = e => {
-  const reg = /^[A-Za-z0-9가-힣+]*$/g;
-
-  if (!reg.test(e.target.value)) {
+  if (!regId.test(e.target.value)) {
     showErrorInput(e.target);
     e.target.nextElementSibling.textContent = '이름을 올바르게 입력해주세요.';
   } else {
@@ -125,19 +130,16 @@ $penIcon2.onclick = e => {
   }
 }
 
-let regError = 0;
-
 // keydomn 시 비밀번호 정규표현식 조건 확인 이벤트
 $modiIf.onkeydown = e => {
   if (!e.target.classList.contains('pw')) return;
 
-  const regPw = /^[A-Za-z0-9+]{4,15}$/;
-  if (!regPw.test(e.target.value)){
+  if (!regPw.test(e.target.value) && e.target.id === 'pw'){
     e.target.nextElementSibling.textContent = '비밀번호는 4~12자, 영어와 숫자로 입력해 주세요.';
-    regError = 1;
+    showErrorInput($modiIfPw);
+    showErrorInput($modiIfRePw);
   } else {
     e.target.nextElementSibling.textContent = '';
-    regError = 0;
   }
 };
 
@@ -146,50 +148,32 @@ $modiIf.onkeydown = e => {
 $modiIf.addEventListener("focusout", async e => {
   if (!e.target.matches('.pw')) return;
 
-  // 현재 비밀번호 확인
-    const res = await fetch(`/users/${user.id}`);
-    const userInfo = await res.json();
-    if (e.target.id === 'curPw' && userInfo.pw !== e.target.value) {
-      showErrorInput($modiIfCurPw);
-      $modiIfCurPw.nextElementSibling.textContent = '현재 비밀번호가 올바르지 않습니다.';
-      return;
-    } else {
-      showGreenInput($modiIfCurPw);
-      $modiIfCurPw.nextElementSibling.textContent = '';
-    }
-
-  // 변경된 비밀번호와 현재 비밀번호 다른지 확인
-  if (e.target.id === 'pw') {
-    const res = await fetch(`/users/${user.id}`);
-    const userInfo = await res.json();
-    if ( regError > 0 ) {
-      showErrorInput($modiIfPw);
-      return;
-    } else if (userInfo.pw === $modiIfPw.value) {
-      showErrorInput($modiIfPw);
-      $modiIfPw.nextElementSibling.textContent = '기존 비밀번호와 동일합니다.';
-      return;
-    } else if (!$modiIfPw.value) {
-      showErrorInput($modiIfPw);
-      $modiIfPw.nextElementSibling.textContent = '';
-      return;
-    } else {
-      showGreenInput($modiIfPw);
-      $modiIfPw.nextElementSibling.textContent = '';
-    }
+  // 현재 비밀번호 일치여부 확인
+  const res = await fetch(`/users/${user.id}`);
+  const userInfo = await res.json();
+  if (e.target.id === 'curPw' && userInfo.pw !== e.target.value) {
+    showErrorInput($modiIfCurPw);
+    $modiIfCurPw.nextElementSibling.textContent = '현재 비밀번호가 올바르지 않습니다.';
+  } else if (e.target.id === 'curPw' && userInfo.pw === e.target.value) {
+    showGreenInput($modiIfCurPw);
+    $modiIfCurPw.nextElementSibling.textContent = '';
   }
-
-  // 변경된 비밀번호와 재입력 일치여부 확인
-    if (e.target.id === 'rePw' && $modiIfPw.value !== $modiIfRePw.value) {
-      showErrorInput($modiIfRePw);
-      $modiIfRePw.nextElementSibling.textContent = '비밀번호가 서로 다릅니다.';
-      return;
-    } else if ($modiIfPw.classList.contains('errorColor')) {
-      showErrorInput($modiIfRePw);
-    } else {
-      showGreenInput($modiIfRePw);
-      $modiIfRePw.nextElementSibling.textContent = '';
-    }
+  
+  // 1. 기존 비밀번호와 동일여부 확인
+  // 2. 새 비밀번호와 재입력 동일여부 확인
+  // 3. 1,2와 빈칸, 정규표현식 모두 통과 시 GreenInput으로 변경
+  if (userInfo.pw === $modiIfPw.value) {
+    showErrorInput($modiIfPw);
+    $modiIfPw.nextElementSibling.textContent = '기존 비밀번호와 동일합니다.';
+  } else if ($modiIfPw.value !== $modiIfRePw.value) {
+    showErrorInput($modiIfPw);
+    showErrorInput($modiIfRePw);
+    $modiIfRePw.nextElementSibling.textContent = '비밀번호가 서로 다릅니다.';
+  } else if (userInfo.pw !== $modiIfPw.value && $modiIfPw.value === $modiIfRePw.value && $modiIfPw.value && regPw.test(e.target.value)) { 
+    showGreenInput($modiIfPw);
+    showGreenInput($modiIfRePw);
+    $modiIfRePw.nextElementSibling.textContent = '';
+  }
 });
 
 // 수정완료 버튼 클릭 이벤트
@@ -221,7 +205,7 @@ $submitBt.onclick = async e => {
         savelog: user.savelog,
         curlog: user.curlog
       }))
-      
+
       // DB로 바뀐 정보 보내기(이름, 비밀번호, 장르)
       // DB로 이름 정보 보내기
       if ($modiIfName.classList.contains('changedColor')) {
@@ -231,7 +215,6 @@ $submitBt.onclick = async e => {
           body: JSON.stringify({name :$modiIfName.value})
         })
       };
-
       // DB로 비밀번호 정보 보내기
       if ($modiIfPw.classList.contains('changedColor')) {
         await fetch(`/users/${user.id}`, {
@@ -240,7 +223,6 @@ $submitBt.onclick = async e => {
           body: JSON.stringify({pw : $modiIfPw.value})
         })
       };
-
       // DB로 장르 정보 보내기
       await fetch(`/users/${user.id}`, {
         method: 'PATCH',
@@ -248,6 +230,7 @@ $submitBt.onclick = async e => {
         body: JSON.stringify({genre: modifiedGenre})
       });
 
+      // 전송 완료 후 input창 초기화해주기
       [...$modiIfContent].forEach(input => {        
         if (input.classList.contains('changedColor')) {
           input.classList.remove('changedColor');
