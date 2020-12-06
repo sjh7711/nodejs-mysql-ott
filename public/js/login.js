@@ -79,6 +79,7 @@ $loginButton.onclick = async () => {
       savelog: saveLogin,
       curlog: true
     }));
+    
     console.warn(xhr.responseText)
     localUser = JSON.parse(localStorage.getItem("login"));
     window.location.href="/html/main.html"
