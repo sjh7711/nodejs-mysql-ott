@@ -2,7 +2,8 @@
   "name": "WHATFLECHA",
   "version": "1.0.0",
   "scripts": {
-    "start": "json-server --watch db.json"
+    "start": "json-server --watch db.json",
+    "bulid": "npm run build"
   },
   "devDependencies": {
     "json-server": "^0.16.3"
