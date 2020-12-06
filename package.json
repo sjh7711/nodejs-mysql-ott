@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "start": "json-server --watch db.json",
-    "bulid": "npm run build"
+    "build": "json-server --watch db.json"
   },
   "devDependencies": {
     "json-server": "^0.16.3"
