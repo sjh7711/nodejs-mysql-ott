@@ -1,11 +1,17 @@
 # WATFLECHA
 > 패스트 캠퍼스 FE스쿨 Javascript 프로젝트에서 진행한 프로젝트 사이트 WATFLICHA입니다.
 
+<br>
+
 ![main2](https://user-images.githubusercontent.com/69497936/101235861-73193100-370f-11eb-9358-2a9a36bfc85e.png)
+
+<br>
 
 # 프로젝트 목표
 
 > 넷플리스나 왓챠와 같은 OTT서비스를 클론 코딩 및 개선점을 추가하여 WAFLECHA 영화 정보 사이트를 구현한다.
+
+<br>
 
 # 서비스 기능
 ### 1. 로그인 페이지
@@ -54,10 +60,13 @@
 - DB에 저장된 북마크 영화들을 볼 수 있다.
 - 북마크 페이지에서 팝업창을 통해 원하는 영화의 북마크를 제거할 수 있다. 
 
+<br>
 
 # 개발기간
 - 1차 구현 : 20.11.16 - 20.11.20
 - 2차 구현 : 20.11.22 - 20.12.05 
+
+<br>
 
 # 기술스택 & 툴
 ### Front-End
@@ -69,6 +78,8 @@
 - Slack
 ### 개발 프로세스
 - Agile - Scrum
+
+<br>
 
 # 팀원
 - [김어진](https://github.com/Alex-Eojin) - 기획, 2,3 페이지 HTML/CSS/JS,<br>
