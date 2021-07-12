@@ -20,13 +20,15 @@ $signUpForm.onsubmit = async e => {
   // 만약 값이 있으면 length가 양수, 없으면 0
   // 이미 아이디가 있을 경우
   // 경고 메세지를 올려준다.
-  const checkDuplicationId = users.filter(user => user.id === $signupId.value).length;
+  const checkDuplicationId = users.filter(
+    user => user.id === $signupId.value,
+  ).length;
 
   if (checkDuplicationId) {
     $signupId.classList.add('errorColor');
-    $signupId.nextElementSibling.textContent = '아이디가 이미 존재합니다.'
+    $signupId.nextElementSibling.textContent = '아이디가 이미 존재합니다.';
     ++count;
-  };
+  }
 
   // 인풋창이 빈값일경우 에러 메세지, 인풋창 색깔 변경
   [...$signUpContent].forEach(input => {
@@ -35,13 +37,19 @@ $signUpForm.onsubmit = async e => {
 
       // 경고메세지를 생성해 그다음 요소로 넣어준다.
       input.classList.add('errorColor'); // 에러컬러 클래스를 넣어준다
-      input.nextElementSibling.textContent = `${input.id === 'name' ? '이름을 넣어주십시오.' : input.id === 'id' ? '아이디를 입력해 주십시오' : '비밀번호를 입력해 주십시오.'}`;
+      input.nextElementSibling.textContent = `${
+        input.id === 'name'
+          ? '이름을 넣어주십시오.'
+          : input.id === 'id'
+          ? '아이디를 입력해 주십시오'
+          : '비밀번호를 입력해 주십시오.'
+      }`;
       ++count;
     }
   });
 
   // 비밀번호와 비빌번호 재입력을 비교해 같은지 비교한다.
-  const comparePw = (Pwelement) => {
+  const comparePw = Pwelement => {
     Pwelement.classList.add('errorColor');
 
     Pwelement.nextElementSibling.textContent = '비밀번호가 서로 다릅니다.';
@@ -65,9 +73,9 @@ $signUpForm.onsubmit = async e => {
   }
 
   fetch('/users', {
-    method:'POST',
+    method: 'POST',
     headers: { 'content-Type': 'application/json' },
-    body: JSON.stringify(signUp)
+    body: JSON.stringify(signUp),
   });
 
   // 회원가입이 원활이 된경우
