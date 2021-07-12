@@ -37,7 +37,6 @@ $loginButton.onclick = async () => {
     //json가져와서(GET) 객체로 풀기(json())
     const res = await fetch(`/users/${$loginId.value}`);
     const users = await res.json();
-    console.log(users);
 
     //db의 id, pw 와 입력창의 id,pw가 같으면 추출. 추출된 값의 길이를 변수에 할당.
     const errorMessage = elementNode => {
@@ -92,12 +91,12 @@ $loginButton.onclick = async () => {
   }
 };
 
-//회원가입 버튼 클릭시 signUp으로 이동.
+// 회원가입 버튼 클릭시 signUp으로 이동.
 $signUpGo.onclick = () => {
   window.location.href = '/html/signUp.html';
 };
 
-//로드될때 localStorage 가져와서 객체로 풀기.
+// 로드될 때 localStorage 가져와서 객체로 풀기.
 window.onload = () => {
   localUser = JSON.parse(localStorage.getItem('login'));
   if (localUser.savelog) {
