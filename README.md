@@ -1,6 +1,5 @@
 # 📽 WATFLECHA
-> Front-end 4명이 1주간 진행한 Vanilla Javascript 프로젝트 사이트입니다. <br />
-> 넷플리스나 왓챠와 같은 OTT서비스를 클론 코딩 및 개선점을 추가하여 WAFLECHA 영화 정보 사이트를 구현했습니다.
+> Front-end 4명이 1주간 진행한 Vanilla JavaScript 영화 정보 사이트 WAFLECHA입니다. <br />
 
 ![main2](https://user-images.githubusercontent.com/69497936/101235861-73193100-370f-11eb-9358-2a9a36bfc85e.png)
 
@@ -102,14 +101,16 @@ $ npm start
 <div id='id-section5'/>
 
 ## 🛠 Tech Stacks
-### Front-End
+**Front-End**
 - HTML
 - CSS
 - Javascript
-### 협업
+
+**협업**
 - git/github
 - Slack
-### 개발 프로세스
+
+**개발 프로세스**
 - Agile - Scrum
 
 <br>
