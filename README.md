@@ -102,9 +102,9 @@ $ npm start
 
 ## 🛠 Tech Stacks
 **Front-End**
-- HTML
-- CSS
-- Javascript
+- HTML5
+- CSS3
+- JavaScript(ES6+)
 
 **협업**
 - git/github
