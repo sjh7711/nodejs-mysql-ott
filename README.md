@@ -1,19 +1,48 @@
-# WATFLECHA
-> 패스트 캠퍼스 FE스쿨 Javascript 프로젝트에서 진행한 프로젝트 사이트 WATFLICHA입니다.
-
-<br>
+# 📽 WATFLECHA
+> Front-end 4명이 1주간 진행한 Vanilla Javascript 프로젝트 사이트입니다. <br />
+> 넷플리스나 왓챠와 같은 OTT서비스를 클론 코딩 및 개선점을 추가하여 WAFLECHA 영화 정보 사이트를 구현했습니다.
 
 ![main2](https://user-images.githubusercontent.com/69497936/101235861-73193100-370f-11eb-9358-2a9a36bfc85e.png)
 
 <br>
 
-# 프로젝트 목표
-
-> 넷플리스나 왓챠와 같은 OTT서비스를 클론 코딩 및 개선점을 추가하여 WAFLECHA 영화 정보 사이트를 구현한다.
+## 📜 Overview 
+- [Demo](#id-section1)
+- [Installation and usage](#id-section2)
+- [Functional Specification](#id-section3)
+- [Project period](#id-section4)
+- [Tech Stacks](#id-section5)
+- [Team Members](#id-section6)
 
 <br>
 
-# 서비스 기능
+<div id='id-section1'/>
+
+## 📀 Demo
+
+https://user-images.githubusercontent.com/69497936/130321956-0e7ac407-352b-4c1a-b1ef-a58c238ef768.mp4
+
+<br />
+
+<div id='id-section2'/>
+
+## 💾 Installation and usage
+```
+$ git clone https://github.com/hanseul-lee/WATFLECHA.git
+$ cd WATFLECHA
+$ npm start
+```
+- 참고용 계정
+```
+아이디: hihi
+비밀번호: 1234 
+```
+
+<br />
+
+<div id='id-section3'/>
+
+## 📕 Functional Specification
 ### 1. 로그인 페이지
 - 아이디, 비밀번호 값이 공백이거나, 회원가입 한 아이디가 없으면 에러 메세지를 출력해준다.
 - 아이디 정보 저장 버튼을 체크했을 시, 한 번이라도 로그인하였다면 다음 로그인 화면에서 아이디가 남아있도록 했다.
@@ -62,13 +91,17 @@
 
 <br>
 
-# 개발기간
+<div id='id-section4'/>
+
+## 🏃‍♀️ Project period
 - 1차 구현 : 20.11.16 - 20.11.20
 - 2차 구현 : 20.11.22 - 20.12.05 
 
 <br>
 
-# 기술스택 & 툴
+<div id='id-section5'/>
+
+## 🛠 Tech Stacks
 ### Front-End
 - HTML
 - CSS
@@ -81,7 +114,9 @@
 
 <br>
 
-# 팀원
+<div id='id-section6'/>
+
+## 👨‍💻 Team Members
 - [김어진](https://github.com/Alex-Eojin) - 기획, 2,3 페이지 HTML/CSS/Javascript,<br>
  2차 구현(2,3 페이지 리팩토링, 6 장르 페이지 추가, 6,7 페이지 페이지네이션 추가)
 - [박상언](https://github.com/parksaneon) - 기획, 4,5 페이지 HTML/CSS/Javascript, 전반적인 진행사항 QA역할
