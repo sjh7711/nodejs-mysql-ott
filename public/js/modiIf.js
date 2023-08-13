@@ -152,8 +152,13 @@ $modiIf.addEventListener('focusout', async e => {
   if (!e.target.matches('.pw')) return;
 
   // 현재 비밀번호 일치여부 확인
-  const res = await fetch(`/users/${user.id}`);
+  const res = await fetch('/getpw', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({id: user.id})
+  });
   const userInfo = await res.json();
+  console.log(userInfo)
   if (e.target.id === 'curPw' && userInfo.pw !== e.target.value) {
     showErrorInput($modiIfCurPw);
     $modiIfCurPw.nextElementSibling.textContent =
@@ -219,26 +224,10 @@ $submitBt.onclick = async e => {
 
       // DB로 바뀐 정보 보내기(이름, 비밀번호, 장르)
       // DB로 이름 정보 보내기
-      if ($modiIfName.classList.contains('changedColor')) {
-        await fetch(`/users/${user.id}`, {
-          method: 'PATCH',
-          headers: { 'content-Type': 'application/json' },
-          body: JSON.stringify({ name: $modiIfName.value }),
-        });
-      }
-      // DB로 비밀번호 정보 보내기
-      if ($modiIfPw.classList.contains('changedColor')) {
-        await fetch(`/users/${user.id}`, {
-          method: 'PATCH',
-          headers: { 'content-Type': 'application/json' },
-          body: JSON.stringify({ pw: $modiIfPw.value }),
-        });
-      }
-      // DB로 장르 정보 보내기
-      await fetch(`/users/${user.id}`, {
-        method: 'PATCH',
+      fetch('/modify', {
+        method: 'POST',
         headers: { 'content-Type': 'application/json' },
-        body: JSON.stringify({ genre: modifiedGenre }),
+        body: JSON.stringify({id:user.id, name:$modiIfName.value, pw:$modiIfPw.value, genre:modifiedGenre} ),
       });
 
       // 전송 완료 후 input창 초기화해주기

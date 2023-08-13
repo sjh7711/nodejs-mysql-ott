@@ -25,66 +25,41 @@ let localUser;
 $loginButton.onclick = async () => {
   $errorMsgEmptyId.textContent = '';
   $errorMsgEmptyPw.textContent = '';
+  
+  const isUser = { id : $loginId.value, pw : $loginPw.value };
 
+  console.log("trylogin");
   try {
-    let errorcount = 0;
-
-    [...$errorMessage].forEach(error => {
-      error.classList.remove('active');
-      error.previousElementSibling.classList.remove('errorColor');
+    const response = await fetch('/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(isUser)
     });
 
-    //json가져와서(GET) 객체로 풀기(json())
-    const res = await fetch(`/users/${$loginId.value}`);
-    const users = await res.json();
-
-    //db의 id, pw 와 입력창의 id,pw가 같으면 추출. 추출된 값의 길이를 변수에 할당.
-    const errorMessage = elementNode => {
-      elementNode.classList.add('active');
-      elementNode.previousElementSibling.classList.add('errorColor');
-      elementNode.textContent = `${
-        elementNode === $errorMsgEmptyId || elementNode === $errorMsgEmptyPw
-          ? '정보를 올바르게 입력해 주세요.'
-          : ''
-      }`;
-    };
-
-    //id 입력창의 값이 공백이거나 db의 id와 다르면 오류 메시지 출력
-    if ($loginId.value === '') {
-      errorMessage($errorMsgEmptyId);
-      ++errorcount;
-    } else if ($loginId.value !== users.id) {
-      errorMessage($errorMsgEmptyId);
-      $errorMsgEmptyId.textContent = `아이디를 올바르게 입력해 주세요.`;
-      ++errorcount;
+    if (response.status === 400) {
+      $errorMsgEmptyId.textContent = '아이디 또는 비밀번호를 확인해 주세요.';
+      $errorMsgEmptyId.classList.add('active');
+      $errorMsgEmptyId.previousElementSibling.classList.add('errorColor');
+      return;
     }
 
-    //pw 입력창의 값이 공백이거나 db의 pw와 다르면 오류 메시지 출력
-    if ($loginPw.value === '') {
-      errorMessage($errorMsgEmptyPw);
-      ++errorcount;
-    } else if ($loginPw.value !== users.pw) {
-      errorMessage($errorMsgEmptyPw);
-      $errorMsgEmptyPw.textContent = `비밀번호를 올바르게 입력해 주세요.`;
-      ++errorcount;
-    }
-
-    if (errorcount > 0) return;
+    const responseData = await response.json();
+    
     saveLogin = $loginRememberCheck.checked;
-
-    //id,pw입력창이 db의 id,pw와 같고 로그인 버튼을 누르면 main으로 이동.
+    console.log(response);
     localStorage.setItem(
       'login',
       JSON.stringify({
-        id: users.id,
-        name: users.name,
-        genre: users.genre,
+        id: responseData.id,
+        name: responseData.name,
+        genre: responseData.genre,
         savelog: saveLogin,
         curlog: true,
       }),
     );
 
     localUser = JSON.parse(localStorage.getItem('login'));
+
     window.location.href = '/html/main.html';
   } catch (err) {
     console.error('[ERROR~!]', err);
@@ -96,7 +71,6 @@ $signUpGo.onclick = () => {
   window.location.href = '/html/signUp.html';
 };
 
-// 로드될 때 localStorage 가져와서 객체로 풀기.
 window.onload = () => {
   localUser = JSON.parse(localStorage.getItem('login'));
   if (localUser.savelog) {

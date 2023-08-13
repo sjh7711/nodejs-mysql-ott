@@ -16,7 +16,6 @@
 }
 
 .logo-img>a>img {
-  background-image: url(../image/WATFLICHA-logo.png);
   background-size: contain;
   display: inline-block;
   width: 175px;

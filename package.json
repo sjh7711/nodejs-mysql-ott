@@ -1,11 +1,13 @@
 {
   "name": "WATFLECHA",
   "version": "1.0.0",
-  "scripts": {
-    "start": "json-server --watch db.json",
-    "build": "cp db.json /public/db.json."
-  },
   "devDependencies": {
-    "json-server": "^0.16.3"
+    "json-server": "^0.17.3"
+  },
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "express": "^4.18.2",
+    "mysql": "^2.18.1",
+    "path": "^0.12.7"
   }
 }

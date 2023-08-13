@@ -63,10 +63,15 @@ const checkValidId = async input => {
     }
 
     // id중복확인 : DB에서 id 가져와 중복이면 경고문
-    const res = await fetch('/users');
+    const res = await fetch('/checkid', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({id:input.value})
+    });
+
     const users = await res.json();
-    const userIds = users.map(user => user.id);
-    if (userIds.find(userId => userId === input.value)) {
+    console.log(users);
+    if (users["count(*)"] > 0) {
       if (input.classList.contains('correctColor')) {
         input.classList.remove('correctColor');
       }
@@ -141,7 +146,7 @@ $signUpForm.onsubmit = e => {
     signUp[pair[0]] = pair[1];
   }
 
-  fetch('/users', {
+  fetch('/register', {
     method: 'POST',
     headers: { 'content-Type': 'application/json' },
     body: JSON.stringify(signUp),

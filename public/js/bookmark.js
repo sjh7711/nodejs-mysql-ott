@@ -37,8 +37,15 @@ $userName.innerHTML = user.name;
 // 첫 화면에서 db bookmark 정보 가져와 화면에 렌더링
 (async () => {
   try {
-    const users = await fetch(`/users/${user.id}`);
-    const { bookmarks } = await users.json();
+    const response = await fetch('/selectbook', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({id: user.id})
+    });
+
+    const resultsjson = await response.json();
+    const bookmarks = resultsjson.length > 0 ? resultsjson.map(v=>v.book) : [];
+    console.log(bookmarks);
     bookmarks.forEach(async movie_id => {
       const url = `https://api.themoviedb.org/3/movie/${movie_id}?api_key=${api_key}&language=ko`;
       const res = await fetch(url);
@@ -148,37 +155,8 @@ $closeBtn.onclick = async e => {
   document.querySelector('.fa-chevron-down').classList.remove('active');
   $popupOpen.style.height = 0;
   $likeBtn.firstElementChild.innerHTML = '찜완료!';
-
-  const res = await fetch(`/users/${user.id}`);
-  const { bookmarks: oldbookmarks } = await res.json();
-
-  // liked 유무에 따른 데이터 db에 반영
-  if (!$likeBtn.classList.contains('liked')) {
-    try {
-      const removedNewBookmarks = oldbookmarks.filter(
-        bookmark => bookmark !== selectedId,
-      );
-      await fetch(`/users/${user.id}`, {
-        method: 'PATCH',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ bookmarks: removedNewBookmarks }),
-      });
-      $main__container__movies.removeChild(document.getElementById(selectedId));
-    } catch (err) {
-      console.log('[ERROR]', err);
-    }
-  } else {
-    try {
-      if (oldbookmarks.indexOf(selectedId) !== -1) return;
-      const addedNewBookmarks = oldbookmarks.concat(selectedId);
-      await fetch(`/users/${user.id}`, {
-        method: 'PATCH',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ bookmarks: addedNewBookmarks }),
-      });
-    } catch (err) {
-      console.log('[ERROR]', err);
-    }
+  if(!$likeBtn.classList.contains('liked')){
+    $main__container__movies.removeChild(document.getElementById(selectedId));
   }
 };
 
@@ -188,42 +166,10 @@ $overlay.onclick = async () => {
   document.querySelector('.overlay').style.display = 'none';
   document.querySelector('.fa-chevron-down').classList.remove('active');
   $popupOpen.style.height = 0;
-
-  const res = await fetch(`/users/${user.id}`);
-  const { bookmarks: oldbookmarks } = await res.json();
-
-  // liked 유무에 따른 데이터 db에 반영
-  if (!$likeBtn.classList.contains('liked')) {
-    try {
-      const removedNewBookmarks = oldbookmarks.filter(
-        bookmark => bookmark !== selectedId,
-      );
-      await fetch(`/users/${user.id}`, {
-        method: 'PATCH',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ bookmarks: removedNewBookmarks }),
-      });
-      $main__container__movies.removeChild(document.getElementById(selectedId));
-    } catch (err) {
-      console.log('[ERROR]', err);
-    }
-  } else {
-    try {
-      if (oldbookmarks.indexOf(selectedId) !== -1) return;
-      const addedNewBookmarks = oldbookmarks.concat(selectedId);
-      await fetch(`/users/${user.id}`, {
-        method: 'PATCH',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ bookmarks: addedNewBookmarks }),
-      });
-    } catch (err) {
-      console.log('[ERROR]', err);
-    }
-  }
 };
 
 // popup에서 하트 클릭시 toggle
-$likeBtn.onclick = e => {
+$likeBtn.onclick = async e => {
   $likeBtn.classList.toggle('liked');
 
   if ($likeBtn.classList.contains('liked')) {
@@ -232,14 +178,26 @@ $likeBtn.onclick = e => {
     $heartPopup.style.opacity = '1';
     $heartPopup.style.zIndex = '300';
     $heartPopup.style.display = 'block';
-
+    $heartPopup.classList.add('showing');
+    await fetch('/insertbook', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ id: user.id, book: selectedId }),
+    });
+    
     setTimeout(() => {
       $heartPopup.style.opacity = '0';
       $heartPopup.style.display = 'none';
       $heartPopup.style.transition = 'none';
       $heartPopup.style.zIndex = '-300';
-    }, 1000)();
+      $heartPopup.classList.remove('showing');
+    }, 1000);
   } else {
+    await fetch('/deletebook', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ id: user.id, book: selectedId }),
+    });
     $likeBtn.firstElementChild.innerHTML = '찜하기';
   }
 };
@@ -258,10 +216,10 @@ $logoutBtn.onclick = () => {
   localStorage.setItem(
     'login',
     JSON.stringify({
-      id: users.id,
-      name: users.name,
-      genre: users.genre,
-      savelog: users.savelog,
+      id: user.id,
+      name: user.name,
+      genre: user.genre,
+      savelog: user.savelog,
       curlog: false,
     }),
   );

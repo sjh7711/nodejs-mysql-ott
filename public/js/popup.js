@@ -29,9 +29,13 @@ let getBookmarks;
 
 // localStorage와 db에 반영된 북마크 연동하기
 (async function () {
-  const users = await fetch(`/users/${localUser.id}`);
-  const { bookmarks } = await users.json();
-  getBookmarks = bookmarks ? bookmarks : [];
+  const users = await fetch('/selectbook', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({id: localUser.id})
+  });
+  const bookmarks = await users.json();
+  getBookmarks = bookmarks.length > 0 ? bookmarks.map(v=>v.book) : [];
 })();
 
 const popup = (movie, actors) => {
@@ -50,26 +54,6 @@ const popup = (movie, actors) => {
   } else {
     $likeBtn.firstElementChild.innerHTML = `찜하기`;
     $likeBtn.classList.remove('liked');
-  }
-};
-
-const modifyBookMarks = async () => {
-  const patchBookmarks = $likeBtn.classList.contains('liked')
-    ? getBookmarks.filter(movieId => movieId !== selectedId).concat(selectedId)
-    : getBookmarks.filter(movieId => movieId !== selectedId);
-  try {
-    const patchLi = await fetch(`/users/${localUser.id}`, {
-      method: 'PATCH',
-      headers: { 'content-Type': 'application/json' },
-      body: JSON.stringify({
-        bookmarks: patchBookmarks,
-      }),
-    });
-    const { bookmarks } = await patchLi.json();
-    getBookmarks = bookmarks;
-    $popupVigideo.innerHTML = '';
-  } catch (err) {
-    console.log('[ERROR]', err);
   }
 };
 
@@ -135,6 +119,12 @@ $likeBtn.onclick = async e => {
     $heartPopup.style.zIndex = '300';
     $heartPopup.style.display = 'block';
     $heartPopup.classList.add('showing');
+    await fetch('/insertbook', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ id: localUser.id, book: selectedId }),
+    });
+    getBookmarks.push(selectedId);
     setTimeout(() => {
       $heartPopup.style.opacity = '0';
       $heartPopup.style.display = 'none';
@@ -143,6 +133,12 @@ $likeBtn.onclick = async e => {
       $heartPopup.classList.remove('showing');
     }, 1000);
   } else {
+    await fetch('/deletebook', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ id: localUser.id, book: selectedId }),
+    });
+    getBookmarks.splice(getBookmarks.indexOf(selectedId), 1);
     $likeBtn.firstElementChild.innerHTML = '찜하기';
   }
 };
@@ -153,7 +149,6 @@ $closeBtn.onclick = async e => {
   document.querySelector('.overlay').style.display = 'none';
   document.querySelector('.fa-chevron-down').classList.remove('active');
   $popupOpen.style.height = 0;
-  modifyBookMarks();
 };
 
 // overlay 클릭 이벤트
@@ -162,5 +157,4 @@ $overlay.onclick = async () => {
   document.querySelector('.overlay').style.display = 'none';
   document.querySelector('.fa-chevron-down').classList.remove('active');
   $popupOpen.style.height = 0;
-  modifyBookMarks();
 };
